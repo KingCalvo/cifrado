@@ -1,4 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Nav from "./components/Nav";
+import { ArrayProvider } from "./context/ArrayContext.jsx";
+import { PasswordProvider } from "./context/Password.jsx";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,11 +21,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Nav />
+        <main className="w-full h-screen">
+          <ArrayProvider>
+            <PasswordProvider>{children}</PasswordProvider>
+          </ArrayProvider>
+        </main>
       </body>
     </html>
   );
