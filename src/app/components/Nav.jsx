@@ -17,6 +17,9 @@ const Nav = () => {
         <li className="hover:text-white hover:text-xl transition-all transform">
           <Link href="/hash">Hash</Link>
         </li>
+        <li className="hover:text-white hover:text-xl transition-all transform">
+          <Link href="/document">Documento</Link>
+        </li>
       </ul>
     </nav>
   );
