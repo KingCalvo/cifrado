@@ -23,3 +23,8 @@ npm install
 npm run dev
 
 ### Hacer pull cada que abran el proyecto para bajar los cambios y push cuando quieran subir cambios.
+
+
+
+
+
