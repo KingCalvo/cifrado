@@ -2,106 +2,174 @@ import React from "react";
 import AsciiHexTable from "../components/AsciiHexTable";
 
 const Page = () => {
+  const bits = [
+    1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1,
+    0, 1, 1, 1, 1, 1, 1,
+  ];
+  const password = "clave123";
+
+  function xorEncrypt(bits, password) {
+    return bits.map((b, i) => b ^ password.charCodeAt(i % password.length) % 2);
+  }
+  function xorDecrypt(bits, password) {
+    return xorEncrypt(bits, password);
+  }
+
+  function sumMod2Encrypt(bits, password) {
+    return bits.map(
+      (b, i) => (b + (password.charCodeAt(i % password.length) % 2)) % 2
+    );
+  }
+  function sumMod2Decrypt(bits, password) {
+    return sumMod2Encrypt(bits, password);
+  }
+  function rotate(bits, right = true) {
+    return right
+      ? [bits[bits.length - 1], ...bits.slice(0, -1)]
+      : [...bits.slice(1), bits[0]];
+  }
+  function rotateEncrypt(bits, password) {
+    let arr = [...bits];
+    for (let c of password) arr = rotate(arr, c.charCodeAt(0) % 2 === 1);
+    return arr;
+  }
+  function rotateDecrypt(bits, password) {
+    let arr = [...bits];
+    for (let c of [...password].reverse())
+      arr = rotate(arr, c.charCodeAt(0) % 2 === 0);
+    return arr;
+  }
+  function blockReverseEncrypt(bits, password) {
+    return password.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) %
+      2 ===
+      1
+      ? bits.reverse()
+      : bits;
+  }
+  function blockReverseDecrypt(bits, password) {
+    return blockReverseEncrypt(bits, password);
+  }
+  function permuteEncrypt(bits, password) {
+    let indices = [...bits.keys()];
+    indices.sort(
+      (a, b) =>
+        (password.charCodeAt(a % password.length) % bits.length) -
+        (password.charCodeAt(b % password.length) % bits.length)
+    );
+    return indices.map((i) => bits[i]);
+  }
+  function permuteDecrypt(bits, password) {
+    let indices = [...bits.keys()];
+    indices.sort(
+      (a, b) =>
+        (password.charCodeAt(a % password.length) % bits.length) -
+        (password.charCodeAt(b % password.length) % bits.length)
+    );
+    let original = new Array(bits.length);
+    indices.forEach((idx, i) => (original[idx] = bits[i]));
+    return original;
+  }
+  const shiftLeftDecrypt = (bits) => [
+    bits[bits.length - 1],
+    ...bits.slice(0, -1),
+  ];
+  const shiftRightDecrypt = (bits) => [...bits.slice(1), bits[0]];
+  const pairReverseDecrypt = (bits) => {
+    let arr = [...bits];
+    for (let i = 0; i < arr.length - 1; i += 2)
+      [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+    return arr;
+  };
+  const altSumDecrypt = (bits) =>
+    bits.map((b, i) => (i % 2 === 0 ? (b + 1) % 2 : b));
+  const passwordShiftEncrypt = (bits, password) => {
+    const shift =
+      password.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+      bits.length;
+    return [...bits.slice(-shift), ...bits.slice(0, -shift)];
+  };
+  const passwordShiftDecrypt = (bits, password) => {
+    const shift =
+      password.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+      bits.length;
+    return [...bits.slice(shift), ...bits.slice(0, shift)];
+  };
+  const altXorEncrypt = (bits, password) =>
+    bits.map(
+      (b, i) =>
+        b ^
+        (password.charCodeAt(i % password.length) % 2 ^ (i % 2 === 0 ? 0 : 1))
+    );
+
+  const methods = [
+    { name: "XOR", encrypt: xorEncrypt, decrypt: xorDecrypt },
+    { name: "Suma Mod 2", encrypt: sumMod2Encrypt, decrypt: sumMod2Decrypt },
+    { name: "Rotación", encrypt: rotateEncrypt, decrypt: rotateDecrypt },
+    {
+      name: "Inversión",
+      encrypt: blockReverseEncrypt,
+      decrypt: blockReverseDecrypt,
+    },
+    { name: "Permutación", encrypt: permuteEncrypt, decrypt: permuteDecrypt },
+    {
+      name: "Shift Left",
+      encrypt: shiftLeftDecrypt,
+      decrypt: shiftLeftDecrypt,
+    },
+    {
+      name: "Shift Right",
+      encrypt: shiftRightDecrypt,
+      decrypt: shiftRightDecrypt,
+    },
+    {
+      name: "Inversión por Pares",
+      encrypt: pairReverseDecrypt,
+      decrypt: pairReverseDecrypt,
+    },
+    { name: "Suma Alterna", encrypt: altSumDecrypt, decrypt: altSumDecrypt },
+    {
+      name: "Password Shift",
+      encrypt: passwordShiftEncrypt,
+      decrypt: passwordShiftDecrypt,
+    },
+    {
+      name: "Alternate XOR",
+      encrypt: altXorEncrypt,
+      decrypt: altXorEncrypt,
+    },
+  ];
+
+  let encryptedBits = bits;
+  let resultText = "Original: " + encryptedBits + "\n";
+
+  // Cifrado: numeración creciente
+  methods.forEach((method, index) => {
+    encryptedBits = method.encrypt(encryptedBits, password);
+    resultText += `${index + 1}. ${method.name} Cifrado: ${encryptedBits}\n`;
+  });
+
+  resultText += "\n";
+
+  // Descifrado: numeración decreciente
+  methods.reverse().forEach((method, index) => {
+    encryptedBits = method.decrypt(encryptedBits, password);
+    resultText += `${methods.length - index}. ${
+      method.name
+    } Descifrado: ${encryptedBits}\n`;
+  });
+
+  resultText += "\n" + bits + " Original: ";
+  resultText += "\n" + encryptedBits + " Final Resultado: ";
+
   return (
     <div className="mt-40">
       <AsciiHexTable />
+      <div>
+        <h1>Resultado</h1>
+        <pre>{resultText}</pre>
+      </div>
     </div>
   );
 };
 
 export default Page;
-
-const bits = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-const password = "clave123";
-
-// 1. XOR Decryption
-const xorDecrypt = (bits, password) =>
-  bits.map((b, i) => b ^ (password.charCodeAt(i % password.length) % 2));
-
-// 2. Suma Mod 2 Decryption
-const sumMod2Decrypt = (bits, password) =>
-  bits.map((b, i) => (b - (password.charCodeAt(i % password.length) % 2) + 2) % 2);
-
-// 3. Rotación de bits
-const rotate = (bits, right = true) =>
-  right ? [bits[bits.length - 1], ...bits.slice(0, -1)] : [...bits.slice(1), bits[0]];
-
-const rotateDecrypt = (bits, password) => {
-  let arr = [...bits];
-  for (let c of [...password].reverse()) arr = rotate(arr, c.charCodeAt(0) % 2 === 0);
-  return arr;
-};
-
-// 4. Inversión de bloque
-const blockReverseDecrypt = (bits, password) =>
-  password.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 2 === 1
-    ? bits.reverse()
-    : bits;
-
-// 5. Permutación
-const permuteDecrypt = (bits, password) => {
-  let indices = [...bits.keys()];
-  indices.sort(
-    (a, b) =>
-      (password.charCodeAt(a % password.length) % bits.length) -
-      (password.charCodeAt(b % password.length) % bits.length)
-  );
-  let original = new Array(bits.length);
-  indices.forEach((idx, i) => (original[idx] = bits[i]));
-  return original;
-};
-
-// 6. Desplazamiento (Shift Left)
-const shiftLeftDecrypt = (bits) => [bits[bits.length - 1], ...bits.slice(0, -1)];
-
-// 7. Desplazamiento (Shift Right)
-const shiftRightDecrypt = (bits) => [...bits.slice(1), bits[0]];
-
-// 8. Inversión por pares
-const pairReverseDecrypt = (bits) => {
-  let arr = [...bits];
-  for (let i = 0; i < arr.length - 1; i += 2) [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-  return arr;
-};
-
-// 9. Suma alterna
-const altSumDecrypt = (bits) =>
-  bits.map((b, i) => (i % 2 === 0 ? (b + 1) % 2 : b));
-
-// 10. AND con clave
-const andDecrypt = (bits, password) =>
-  bits.map((b, i) => (b | (password.charCodeAt(i % password.length) % 2)) % 2);
-
-// 11. OR con clave
-const orDecrypt = (bits, password) =>
-  bits.map((b, i) => (b & (password.charCodeAt(i % password.length) % 2)));
-
-// Métodos de descifrado
-const methods = [
-  { name: "XOR", decrypt: xorDecrypt },
-  { name: "Suma Mod 2", decrypt: sumMod2Decrypt },
-  { name: "Rotación", decrypt: rotateDecrypt },
-  { name: "Inversión", decrypt: blockReverseDecrypt },
-  { name: "Permutación", decrypt: permuteDecrypt },
-  { name: "Shift Left", decrypt: shiftLeftDecrypt },
-  { name: "Shift Right", decrypt: shiftRightDecrypt },
-  { name: "Inversión por Pares", decrypt: pairReverseDecrypt },
-  { name: "Suma Alterna", decrypt: altSumDecrypt },
-  { name: "AND con Clave", decrypt: andDecrypt },
-  { name: "OR con Clave", decrypt: orDecrypt },
-];
-
-const decryptData = (encryptedBits) => {
-  let decryptedBits = [...encryptedBits];
-  let resultText = `Inicial: ${decryptedBits.join(" ")}\n`;
-
-  // Descifrado
-  methods.reverse().forEach((method) => {
-    decryptedBits = method.decrypt(decryptedBits, password);
-    resultText += `${method.name} Descifrado: ${decryptedBits.join(" ")}\n`;
-  });
-
-  return resultText;
-};
-
-console.log(decryptData(bits));
