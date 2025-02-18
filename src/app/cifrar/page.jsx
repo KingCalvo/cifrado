@@ -101,6 +101,7 @@ const Page = () => {
         (password.charCodeAt(i % password.length) % 2 ^ (i % 2 === 0 ? 0 : 1))
     );
 
+  //las funciones y los metodos se podrian pasar a un contexto pero la neta le intente per no pude XD
   const methods = [
     { name: "XOR", encrypt: xorEncrypt, decrypt: xorDecrypt },
     { name: "Suma Mod 2", encrypt: sumMod2Encrypt, decrypt: sumMod2Decrypt },
@@ -138,11 +139,11 @@ const Page = () => {
       decrypt: altXorEncrypt,
     },
   ];
-
+  //todo esto es lo mismo para el cifraddo y descifrado
   let encryptedBits = bits;
   let resultText = "Original: " + encryptedBits + "\n";
 
-  // Cifrado: numeración creciente
+  // Cifrado: numeración creciente lo unico que cambia es aquí, no sé si le vayan a poner más pasos o que
   methods.forEach((method, index) => {
     encryptedBits = method.encrypt(encryptedBits, password);
     resultText += `${index + 1}. ${method.name} Cifrado: ${encryptedBits}\n`;
