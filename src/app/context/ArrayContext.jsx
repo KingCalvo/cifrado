@@ -19,8 +19,17 @@ export const ArrayProvider = ({ children }) => {
     setItems((prevItems) => prevItems.filter((_, i) => i !== index));
   };
 
+  // Función para actualizar un elemento del array
+  const updateItem = (index, newValue) => {
+    setItems((prevItems) => {
+      const updated = [...prevItems];
+      updated[index] = newValue;
+      return updated;
+    });
+  };
+
   return (
-    <ArrayContext.Provider value={{ items, addItem, removeItem }}>
+    <ArrayContext.Provider value={{ items, addItem, removeItem, updateItem }}>
       {children}
     </ArrayContext.Provider>
   );
