@@ -136,7 +136,7 @@ const DescifrarPage = () => {
     // Convertir el array de bits de vuelta a bytes
     const newBytes = bitsToBytes(decryptedBits);
     resultText += "Resultado final (bytes): " + newBytes.join(", ");
-    // Actualizar el contexto con los nuevos bytes descifrados para que ByteViewer se actualice
+    // Actualizar el contexto con los nuevos bytes descifrados para que AsciiHexTable se actualice
     updateAllItems(newBytes);
     setDecryptedBytes(newBytes);
     setLog(resultText);
