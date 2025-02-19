@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import AsciiHexTable from "../components/AsciiHexTable";
+import Bitacora from "../components/Bitacora";
 import { useArray } from "../context/ArrayContext";
 import { usePassword } from "../context/Password";
 
@@ -185,7 +186,7 @@ const CifrarPage = () => {
       </div>
       {/* Mostrar el log del proceso de cifrado */}
       <div className="mt-6 p-4 bg-gray-800 rounded text-sm">
-        <pre>{log}</pre>
+        <Bitacora resultText={log} />
       </div>
     </div>
   );
