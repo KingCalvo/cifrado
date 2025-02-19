@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Nav from "./components/Nav";
 import { ArrayProvider } from "./context/ArrayContext.jsx";
+import { ArrayProviderBinary } from "./context/ArrayBinary.jsx";
 import { PasswordProvider } from "./context/Password.jsx";
 import "./globals.css";
 
@@ -28,7 +29,9 @@ export default function RootLayout({ children }) {
         <Nav />
         <main className="w-full h-screen">
           <ArrayProvider>
-            <PasswordProvider>{children}</PasswordProvider>
+            <ArrayProviderBinary>
+              <PasswordProvider>{children}</PasswordProvider>
+            </ArrayProviderBinary>
           </ArrayProvider>
         </main>
       </body>

@@ -1,33 +1,61 @@
 "use client";
+import { useState, useEffect } from "react";
+import { useArray } from "../context/ArrayContext";
+import { useBinaryArray } from "../context/ArrayBinary"; // Importa el contexto de binarios
 
-import { useState } from "react";
-
-function AsciiHexTable() {
-  const initialMessage = "esto es un texto de prueba.".split("");
-  const [message, setMessage] = useState(initialMessage);
+const ByteViewer = () => {
+  const { items, updateItem } = useArray();
+  const { addItem } = useBinaryArray(); // Obtiene la función para agregar binarios
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [asciiValue, setAsciiValue] = useState("");
+  const [hexValue, setHexValue] = useState("");
+  const [lastEdited, setLastEdited] = useState("");
 
-  const handleChange = (index, value, isHex) => {
-    let updatedMessage = [...message];
-    if (isHex) {
-      const parsedValue = parseInt(value, 16);
-      if (!isNaN(parsedValue) && parsedValue >= 0 && parsedValue <= 255) {
-        updatedMessage[index] = String.fromCharCode(parsedValue);
-      }
+  useEffect(() => {
+    if (items[selectedIndex] !== undefined) {
+      setAsciiValue(String.fromCharCode(items[selectedIndex]));
+      setHexValue(
+        items[selectedIndex].toString(16).toUpperCase().padStart(2, "0")
+      );
     } else {
-      if (value.length === 1) {
-        updatedMessage[index] = value;
-      }
+      setAsciiValue("");
+      setHexValue("");
     }
-    setMessage(updatedMessage);
+    setLastEdited("");
+  }, [selectedIndex, items]);
+
+  const handleSelection = (index) => {
+    setSelectedIndex(index);
   };
+
+  const handleEdit = () => {
+    let newByte;
+    if (lastEdited === "ascii" && asciiValue.length === 1) {
+      newByte = asciiValue.charCodeAt(0);
+    } else if (lastEdited === "hex" && hexValue.match(/^[0-9A-Fa-f]{1,2}$/)) {
+      newByte = parseInt(hexValue, 16);
+    }
+    if (newByte !== undefined) {
+      updateItem(selectedIndex, newByte);
+      setLastEdited("");
+    }
+  };
+
+  // Convierte el valor hexadecimal a binario y lo almacena en el contexto de binarios
+  const handleConvertToBinary = () => {
+    if (hexValue.match(/^[0-9A-Fa-f]{1,2}$/)) {
+      const binaryValue = parseInt(hexValue, 16).toString(2).padStart(8, "0");
+      addItem(binaryValue);
+    }
+  };
+
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-3xl mx-auto text-white">
       <h2 className="text-center text-lg font-semibold mb-4">Visor de Bytes</h2>
-
       <div className="grid grid-cols-2 gap-4">
         {/* Tabla ASCII */}
         <div className="border p-2 rounded-md bg-gray-800 shadow">
+          <h2 className="text-center text-lg font-semibold">ASCII</h2>
           <div className="grid grid-cols-11 gap-1 text-center">
             {["#", ...Array.from({ length: 10 }, (_, i) => i)].map(
               (item, index) => (
@@ -39,22 +67,35 @@ function AsciiHexTable() {
                 </div>
               )
             )}
-            {message.map((char, i) => (
-              <div
-                key={i}
-                className={`border p-1 text-center cursor-pointer ${
-                  selectedIndex === i ? "bg-blue-400 text-black" : ""
-                }`}
-                onClick={() => setSelectedIndex(i)}
-              >
-                {char}
-              </div>
-            ))}
           </div>
+          {/* Filas de datos */}
+          {Array.from({ length: Math.max(1, Math.ceil(items.length / 10)) }, (_, row) => (
+            <div key={row} className="grid grid-cols-11 gap-1 text-center">
+              <div className="font-bold text-black bg-gray-200 p-1">
+                {row * 10}
+              </div>
+              {Array.from({ length: 10 }, (_, col) => {
+                const index = row * 10 + col;
+                return (
+                  <div
+                    key={col}
+                    className={`border p-1 cursor-pointer ${
+                      selectedIndex === index ? "bg-blue-400 text-black" : ""
+                    }`}
+                    onClick={() => handleSelection(index)}
+                  >
+                    {items[index] !== undefined
+                      ? String.fromCharCode(items[index])
+                      : ""}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
-
         {/* Tabla Hexadecimal */}
         <div className="border p-2 rounded-md bg-gray-800 shadow">
+          <h2 className="text-center text-lg font-semibold">HEX</h2>
           <div className="grid grid-cols-11 gap-1 text-center">
             {["#", ...Array.from({ length: 10 }, (_, i) => i)].map(
               (item, index) => (
@@ -63,22 +104,32 @@ function AsciiHexTable() {
                 </div>
               )
             )}
-            {message.map((char, i) => (
-              <div
-                key={i}
-                className={`border p-1 text-center cursor-pointer ${
-                  selectedIndex === i ? "bg-blue-400 text-black" : ""
-                }`}
-                onClick={() => setSelectedIndex(i)}
-              >
-                {char.charCodeAt(0).toString(16).toUpperCase()}
-              </div>
-            ))}
           </div>
+          {/* Filas de datos */}
+          {Array.from({ length: Math.max(1, Math.ceil(items.length / 10)) }, (_, row) => (
+            <div key={row} className="grid grid-cols-11 gap-1 text-center">
+              <div className="font-bold bg-gray-700 p-1">{row * 10}</div>
+              {Array.from({ length: 10 }, (_, col) => {
+                const index = row * 10 + col;
+                return (
+                  <div
+                    key={col}
+                    className={`border p-1 cursor-pointer ${
+                      selectedIndex === index ? "bg-blue-400 text-black" : ""
+                    }`}
+                    onClick={() => handleSelection(index)}
+                  >
+                    {items[index] !== undefined
+                      ? items[index].toString(16).toUpperCase().padStart(2, "0")
+                      : ""}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Edición */}
+      {/* Fila de edición */}
       <div className="mt-4 flex justify-between items-center p-2 bg-gray-700 rounded shadow">
         <div>
           Posición:
@@ -86,19 +137,22 @@ function AsciiHexTable() {
             type="number"
             className="border px-2 w-12 mx-2 bg-gray-900 text-white"
             value={selectedIndex}
-            onChange={(e) => setSelectedIndex(Number(e.target.value))}
+            onChange={(e) => handleSelection(Number(e.target.value))}
             min="0"
-            max={message.length - 1}
+            max={items.length - 1}
           />
-          / {message.length - 1}
+          / {items.length - 1}
         </div>
         <div>
           ASCII:
           <input
             type="text"
             className="border px-2 w-12 mx-2 bg-gray-900 text-white"
-            value={message[selectedIndex]}
-            onChange={(e) => handleChange(selectedIndex, e.target.value, false)}
+            value={asciiValue}
+            onChange={(e) => {
+              setAsciiValue(e.target.value);
+              setLastEdited("ascii");
+            }}
           />
         </div>
         <div>
@@ -106,21 +160,22 @@ function AsciiHexTable() {
           <input
             type="text"
             className="border px-2 w-12 mx-2 bg-gray-900 text-white"
-            value={message[selectedIndex]
-              .charCodeAt(0)
-              .toString(16)
-              .toUpperCase()}
-            onChange={(e) => handleChange(selectedIndex, e.target.value, true)}
+            value={hexValue}
+            onChange={(e) => {
+              setHexValue(e.target.value);
+              setLastEdited("hex");
+            }}
           />
         </div>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
-          onClick={() => alert("Valor editado en la posición " + selectedIndex)}
+          onClick={handleConvertToBinary}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded"
         >
-          Editar
+          Convertir a Binario
         </button>
       </div>
     </div>
   );
-}
-export default AsciiHexTable;
+};
+
+export default ByteViewer;

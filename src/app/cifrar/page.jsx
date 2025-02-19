@@ -1,15 +1,12 @@
+"use client";
 import React from "react";
 import AsciiHexTable from "../components/AsciiHexTable";
 import Bitacora from "../components/Bitacora";
-import { useArray } from "../context/ArrayContext";
+import { useBinaryArray } from "../context/ArrayBinary";
 
 const Page = () => {
-  const bits = [
-    1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1,
-    0, 1, 1, 1, 1, 1, 1,
-  ];
+  const { items: bits } = useBinaryArray();
   const password = "clave123";
-
   function xorEncrypt(bits, password) {
     return bits.map((b, i) => b ^ password.charCodeAt(i % password.length) % 2);
   }
