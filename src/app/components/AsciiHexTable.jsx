@@ -65,9 +65,7 @@ const ByteViewer = () => {
           {/* Filas de datos */}
           {Array.from({ length: rows }, (_, row) => (
             <div key={row} className="grid grid-cols-11 gap-1 text-center">
-              <div className="font-bold text-black bg-gray-200 p-1">
-                {row * 10}
-              </div>
+              <div className="font-bold text-black bg-gray-200">{row * 10}</div>
               {Array.from({ length: 10 }, (_, col) => {
                 const index = row * 10 + col;
                 return (
@@ -102,7 +100,7 @@ const ByteViewer = () => {
           {/* Filas de datos */}
           {Array.from({ length: rows }, (_, row) => (
             <div key={row} className="grid grid-cols-11 gap-1 text-center">
-              <div className="font-bold bg-gray-700 p-1">{row * 10}</div>
+              <div className="font-bold bg-gray-700">{row * 10}</div>
               {Array.from({ length: 10 }, (_, col) => {
                 const index = row * 10 + col;
                 return (
@@ -129,7 +127,7 @@ const ByteViewer = () => {
           Posición:
           <input
             type="number"
-            className="border px-2 w-12 mx-2 bg-gray-900 text-white"
+            className="border px-2 w-20 mx-2 bg-gray-900 text-white"
             value={selectedIndex}
             onChange={(e) => handleSelection(Number(e.target.value))}
             min="0"
