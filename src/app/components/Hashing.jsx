@@ -20,7 +20,7 @@ function Hashing() {
       if (value.length === 1) {
         updatedMessage[index] = value;
       }
-    }
+    }//s
     setMessage(updatedMessage);
   };
 
