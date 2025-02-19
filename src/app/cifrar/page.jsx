@@ -1,5 +1,7 @@
 import React from "react";
 import AsciiHexTable from "../components/AsciiHexTable";
+import Bitacora from "../components/Bitacora";
+import { useArray } from "../context/ArrayContext";
 
 const Page = () => {
   const bits = [
@@ -163,12 +165,9 @@ const Page = () => {
   resultText += "\n" + encryptedBits + " Final Resultado: ";
 
   return (
-    <div className="mt-40">
+    <div className="mt-40 min-h-screen pb-16">
       <AsciiHexTable />
-      <div>
-        <h1>Resultado</h1>
-        <pre>{resultText}</pre>
-      </div>
+      <Bitacora resultText={resultText} />
     </div>
   );
 };
