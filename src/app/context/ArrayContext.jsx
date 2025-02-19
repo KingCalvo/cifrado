@@ -28,8 +28,14 @@ export const ArrayProvider = ({ children }) => {
     });
   };
 
+  const updateAllItems = (newItems) => {
+    setItems(newItems);
+  };
+
   return (
-    <ArrayContext.Provider value={{ items, addItem, removeItem, updateItem }}>
+    <ArrayContext.Provider
+      value={{ items, addItem, removeItem, updateItem, updateAllItems }}
+    >
       {children}
     </ArrayContext.Provider>
   );
