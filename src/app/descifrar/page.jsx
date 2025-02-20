@@ -126,6 +126,11 @@ const DescifrarPage = () => {
       setLog("Por favor ingrese una contraseña (4 caracteres).");
       return;
     }
+    // Verificar que se haya ingresado una contraseña de 4 caracteres
+    if (!localPassword || localPassword.trim().length !== 4) {
+      setLog("La contraseña debe tener exactamente 4 caracteres.");
+      return;
+    }
 
     // Convertir el array de bytes actual a bits
     const bits = bytesToBits(items);
