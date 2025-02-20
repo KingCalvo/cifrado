@@ -9,12 +9,9 @@ const DocumentForm = () => {
   const { addItem } = useArray();
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-    if (file) {
-      setFileName(file.name); // Actualiza el nombre del archivo cuando se selecciona uno
-    } else {
-      setFileName(""); // Si no hay archivo, limpia el nombre
-    }
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    setFileName(selectedFile ? selectedFile.name : "");
   };
 
   const handleSubmit = (event) => {
@@ -44,18 +41,28 @@ const DocumentForm = () => {
     }
   };
 
+  const handleDelete = () => {
+    setFile(null);
+    setFileName("");
+    clearItems(); // Borra todos los elementos del contexto
+    console.log("Archivo eliminado y contexto limpiado");
+  };
+  
+
   return (
     <section className="w-full h-screen flex justify-center items-center">
       <form
         onSubmit={handleSubmit}
-        className="min-w-[300px] max-w-[700px] bg-slate-600 h-[400px] rounded-2xl p-4 flex flex-col justify-center items-center gap-8"
+        className="min-w-[300px] max-w-[700px] bg-slate-600 h-[450px] rounded-2xl p-8 flex flex-col justify-center items-center gap-8"
       >
         <div className="flex flex-col justify-center items-center gap-8">
           <label htmlFor="document" className="bg-slate-400 w-36 h-36 rounded-2xl cursor-pointer hover:font-bold hover:scale-110 hover:border-2 hover:border-white transition-all flex flex-col justify-center items-center" >
             <FaFileDownload className="text-4xl w-5/6" />
             <p>Subir documento</p>
           </label>
-          <span className="text-center text-2xl font-semibold">
+          <span className={`text-center text-2xl font-semibold ${
+            fileName ? "text-green-500" : "text-red-500"
+          }`}> 
             {fileName ? fileName : "No se ha seleccionado un archivo"}
           </span>
           <input type="file" id="document" onChange={handleFileChange} className="hidden" />
@@ -64,7 +71,14 @@ const DocumentForm = () => {
           type="submit"
           className="bg-blue-700 rounded-xl px-6 py-4 text-xl hover:scale-110 hover:border-white hover:border-2 hover:transition-all"
         >
-          Submit
+          Cargar documento
+        </button>
+        <button
+          type="submit"
+          onClick={handleDelete}
+          className="bg-red-700 rounded-xl px-6 py-4 text-xl hover:scale-110 hover:border-white hover:border-2 hover:transition-all"
+        >
+          Eliminar documento
         </button>
       </form>
     </section>
