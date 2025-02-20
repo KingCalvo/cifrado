@@ -6,7 +6,7 @@ import { FaFileDownload } from "react-icons/fa";
 const DocumentForm = () => {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
-  const { addItem } = useArray();
+  const { addItem, clearItems, items } = useArray();
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -50,10 +50,10 @@ const DocumentForm = () => {
   
 
   return (
-    <section className="w-full h-screen flex justify-center items-center">
+    <section className="w-full h-screen flex justify-center items-end">
       <form
         onSubmit={handleSubmit}
-        className="min-w-[300px] max-w-[700px] bg-slate-600 h-[450px] rounded-2xl p-8 flex flex-col justify-center items-center gap-8"
+        className="min-w-[300px] max-w-[700px] bg-slate-600 h-[500px] rounded-2xl p-8 mb-8 flex flex-col justify-center items-center gap-8"
       >
         <div className="flex flex-col justify-center items-center gap-8">
           <label htmlFor="document" className="bg-slate-400 w-36 h-36 rounded-2xl cursor-pointer hover:font-bold hover:scale-110 hover:border-2 hover:border-white transition-all flex flex-col justify-center items-center" >
@@ -63,7 +63,10 @@ const DocumentForm = () => {
           <span className={`text-center text-2xl font-semibold ${
             fileName ? "text-green-500" : "text-red-500"
           }`}> 
-            {fileName ? fileName : "No se ha seleccionado un archivo"}
+            {fileName ? fileName: "No se ha seleccionado un archivo"}
+          </span>
+          <span>
+            {items.length} bytes cargados
           </span>
           <input type="file" id="document" onChange={handleFileChange} className="hidden" />
         </div>
