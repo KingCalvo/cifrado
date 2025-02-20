@@ -6,7 +6,7 @@ import { FaFileDownload } from "react-icons/fa";
 const DocumentForm = () => {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
-  const { addItem, clearItems, items } = useArray();
+  const { addItem, clearItems, items, addArray } = useArray();
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -23,10 +23,7 @@ const DocumentForm = () => {
         const arrayBuffer = reader.result;
         const byteArray = new Uint8Array(arrayBuffer); // Convierte en array de bytes
 
-        // Agrega cada byte individualmente al contexto
-        byteArray.forEach((byte) => {
-          addItem(byte);
-        });
+        addArray(byteArray)
 
         console.log(
           "Archivo convertido y bytes añadidos al contexto:",

@@ -36,9 +36,13 @@ export const ArrayProvider = ({ children }) => {
     setItems([]);
   };
 
+  const addArray = (array) => {
+    setItems(array)
+  }
+
   return (
     <ArrayContext.Provider
-      value={{ items, addItem, removeItem, updateItem, updateAllItems, clearItems }}
+      value={{ items, addItem, removeItem, updateItem, updateAllItems, clearItems, addArray }}
     >
       {children}
     </ArrayContext.Provider>

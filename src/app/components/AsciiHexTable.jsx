@@ -44,7 +44,7 @@ const ByteViewer = () => {
   const rows = Math.max(1, Math.ceil(items.length / 10));
 
   return (
-    <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-3xl mx-auto text-white">
+    <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-60 mx-auto text-white overflow-auto">
       <h2 className="text-center text-lg font-semibold mb-4">Visor de Bytes</h2>
       <div className="grid grid-cols-2 gap-4">
         {/* Tabla ASCII */}
