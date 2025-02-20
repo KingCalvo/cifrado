@@ -125,20 +125,81 @@ const CifrarPage = () => {
     // Convertir bytes a bits
     const bits = bytesToBits(items);
     let encryptedBits = [...bits];
-    let resultText = "Original (bits): " + encryptedBits.join("") + "\n";
+    let resultText = "\nPrimer bit (original): " + encryptedBits[0] + "\n\n";
 
     const pass = localPassword;
+
     // Aplicar cada método de cifrado
     methods.forEach((method, index) => {
+      const previousBit = encryptedBits[0]; // Guarda el primer bit antes de la operación
+
+      // Aplica el método de cifrado y captura el primer bit
       encryptedBits = method.encrypt(encryptedBits, pass);
-      resultText += `${index + 1}. ${method.name} Cifrado: ${encryptedBits.join(
-        ""
-      )}\n`;
+      const newBit = encryptedBits[0];
+
+      // Descripción de la operación realizada
+      let operationDescription = "";
+      switch (method.name) {
+        case "XOR":
+          operationDescription = `XOR con (bit: ${previousBit} XOR ${
+            pass.charCodeAt(0) % 2
+          }) usando el primer carácter de la contraseña (${pass.charAt(0)})`;
+          break;
+        case "Suma Mod 2":
+          operationDescription = `Suma mod 2 con (bit: ${previousBit} + ${
+            pass.charCodeAt(0) % 2
+          } % 2) usando el primer carácter de la contraseña (${pass.charAt(
+            0
+          )})`;
+          break;
+        case "Rotación":
+          operationDescription = `Rotación ${
+            pass.charCodeAt(0) % 2 === 1 ? "derecha" : "izquierda"
+          } basada en el primer carácter de la contraseña (${pass.charAt(0)})`;
+          break;
+        case "Inversión":
+          operationDescription = `Inversión ${
+            pass.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 2 ===
+            1
+              ? "realizada"
+              : "no realizada"
+          } según la suma de los valores ASCII de la contraseña (${pass})`;
+          break;
+        case "Permutación":
+          operationDescription = `Permutación basada en los valores ASCII de la contraseña (${pass})`;
+          break;
+        case "Shift Left":
+          operationDescription = `Desplazamiento a la izquierda (bit: ${previousBit} -> ${newBit})`;
+          break;
+        case "Shift Right":
+          operationDescription = `Desplazamiento a la derecha (bit: ${previousBit} -> ${newBit})`;
+          break;
+        case "Inversión por Pares":
+          operationDescription = `Intercambio de bits por pares (bit: ${previousBit} -> ${newBit})`;
+          break;
+        case "Suma Alterna":
+          operationDescription = `Suma +1 en posiciones pares (bit: ${previousBit} -> ${newBit})`;
+          break;
+        case "Password Shift":
+          operationDescription = `Desplazamiento circular por la suma de los valores ASCII de la contraseña (${pass})`;
+          break;
+        case "Alternate XOR":
+          operationDescription = `XOR alterno con (bit: ${previousBit} XOR ${
+            pass.charCodeAt(0) % 2 ^ (index % 2 === 0 ? 0 : 1)
+          }) usando el primer carácter de la contraseña (${pass.charAt(0)})`;
+          break;
+        default:
+          operationDescription = `Operación desconocida`;
+      }
+
+      // Agrega la operación realizada al resultText
+      resultText += `Paso ${
+        index + 1
+      }:\n${previousBit} ${operationDescription} = ${newBit}\n\n`;
     });
-    resultText += "\nResultado final (bits): " + encryptedBits.join("") + "\n";
+
     // Convertir bits a bytes
     const newBytes = bitsToBytes(encryptedBits);
-    resultText += "Resultado final (bytes): " + newBytes.join(", ");
 
     // Actualizar el contexto con los nuevos bytes cifrados
     updateAllItems(newBytes);
