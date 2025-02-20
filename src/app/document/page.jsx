@@ -74,14 +74,14 @@ const DocumentForm = () => {
           type="submit"
           className="bg-blue-700 rounded-xl px-6 py-4 text-xl hover:scale-110 hover:border-white hover:border-2 hover:transition-all"
         >
-          Cargar documento
+          Cargar Bytes
         </button>
         <button
           type="submit"
           onClick={handleDelete}
           className="bg-red-700 rounded-xl px-6 py-4 text-xl hover:scale-110 hover:border-white hover:border-2 hover:transition-all"
         >
-          Eliminar documento
+          Vaciar Bytes
         </button>
       </form>
     </section>
