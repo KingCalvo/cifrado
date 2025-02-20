@@ -121,6 +121,12 @@ const DescifrarPage = () => {
   const [decryptedBytes, setDecryptedBytes] = useState([]);
 
   const handleDescifrar = () => {
+    // Verificar que se haya ingresado una contraseña
+    if (!localPassword || localPassword.trim() === "") {
+      setLog("Por favor ingrese una contraseña (4 caracteres).");
+      return;
+    }
+
     // Convertir el array de bytes actual a bits
     const bits = bytesToBits(items);
     let decryptedBits = [...bits];

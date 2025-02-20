@@ -11,7 +11,7 @@ const bytesToBits = (bytes) => {
   bytes.forEach((byte) => {
     const binStr = byte.toString(2).padStart(8, "0");
     binStr.split("").forEach((bit) => {
-      bits.push(parseInt(bit));
+      bits.push(parseInt(bit, 10));
     });
   });
   return bits;
@@ -111,6 +111,12 @@ const CifrarPage = () => {
   const [encryptedBytes, setEncryptedBytes] = useState([]);
 
   const handleCifrar = () => {
+    // Verificar que se haya ingresado una contraseña
+    if (!localPassword || localPassword.trim() === "") {
+      setLog("Por favor ingrese una contraseña (4 caracteres).");
+      return;
+    }
+
     // Convertir bytes a bits
     const bits = bytesToBits(items);
     let encryptedBits = [...bits];
