@@ -28,8 +28,7 @@ const bitsToBytes = (bits) => {
   return bytes;
 };
 
-// Métodos de descifrado (en orden inverso al cifrado)
-// Nota: Algunos métodos son simétricos, por lo que su función de cifrado y descifrado es la misma.
+// Métodos de descifrado (ya definidos en el orden inverso al cifrado)
 function xorDecrypt(bits, password) {
   return bits.map((b, i) => b ^ password.charCodeAt(i % password.length) % 2);
 }
@@ -39,7 +38,7 @@ function sumMod2Decrypt(bits, password) {
   );
 }
 function rotateDecrypt(bits, password) {
-  // Se recorre la contraseña en orden inverso para revertir la rotación
+  // Recorre la contraseña en orden inverso para revertir la rotación
   let arr = [...bits];
   for (let c of [...password].reverse()) {
     arr = rotate(arr, c.charCodeAt(0) % 2 === 0);
@@ -121,11 +120,6 @@ const DescifrarPage = () => {
   const [decryptedBytes, setDecryptedBytes] = useState([]);
 
   const handleDescifrar = () => {
-    // Verificar que se haya ingresado una contraseña
-    if (!localPassword || localPassword.trim() === "") {
-      setLog("Por favor ingrese una contraseña (4 caracteres).");
-      return;
-    }
     // Verificar que se haya ingresado una contraseña de 4 caracteres
     if (!localPassword || localPassword.trim().length !== 4) {
       setLog("La contraseña debe tener exactamente 4 caracteres.");
@@ -135,92 +129,83 @@ const DescifrarPage = () => {
     // Convertir el array de bytes actual a bits
     const bits = bytesToBits(items);
     let decryptedBits = [...bits];
-    let resultText = "Original (bits): " + decryptedBits[0] + "\n\n";
+    let resultText = "\nPrimer bit (original): " + decryptedBits[0] + "\n\n";
     const pass = localPassword;
-    // Aplicar cada método de descifrado en orden inverso
-    methods
-      .slice()
-      .reverse()
-      .forEach((method, index) => {
-        const previousBit = decryptedBits[0]; // Guarda el primer bit antes de la operación
 
-        // Aplica el método de descifrado y captura el primer bit
-        decryptedBits = method.decrypt(decryptedBits, pass);
-        const newBit = decryptedBits[0];
+    // Aplicar cada método de descifrado en el orden definido (ya está en orden inverso)
+    methods.forEach((method, index) => {
+      const previousBit = decryptedBits[0]; // Guarda el primer bit antes de la operación
+      decryptedBits = method.decrypt(decryptedBits, pass);
+      const newBit = decryptedBits[0];
 
-        // Descripción de la operación realizada
-        let operationDescription = "";
-        switch (method.name) {
-          case "XOR":
-            operationDescription = `XOR inverso con (bit: ${previousBit} XOR ${
-              pass.charCodeAt(0) % 2
-            }) usando el primer carácter de la contraseña (${pass.charAt(0)})`;
-            break;
-          case "Suma Mod 2":
-            operationDescription = `Resta mod 2 con (bit: ${previousBit} - ${
-              pass.charCodeAt(0) % 2
-            } % 2) usando el primer carácter de la contraseña (${pass.charAt(
-              0
-            )})`;
-            break;
-          case "Rotación":
-            operationDescription = `Rotación inversa ${
-              pass.charCodeAt(0) % 2 === 1 ? "izquierda" : "derecha"
-            } basada en el primer carácter de la contraseña (${pass.charAt(
-              0
-            )})`;
-            break;
-          case "Inversión":
-            operationDescription = `Inversión inversa ${
-              pass.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) %
-                2 ===
-              1
-                ? "realizada"
-                : "no realizada"
-            } según la suma de los valores ASCII de la contraseña (${pass})`;
-            break;
-          case "Permutación":
-            operationDescription = `Permutación inversa basada en los valores ASCII de la contraseña (${pass})`;
-            break;
-          case "Shift Left":
-            operationDescription = `Desplazamiento inverso a la derecha (bit: ${previousBit} -> ${newBit})`;
-            break;
-          case "Shift Right":
-            operationDescription = `Desplazamiento inverso a la izquierda (bit: ${previousBit} -> ${newBit})`;
-            break;
-          case "Inversión por Pares":
-            operationDescription = `Intercambio inverso de bits por pares (bit: ${previousBit} -> ${newBit})`;
-            break;
-          case "Suma Alterna":
-            operationDescription = `Resta -1 en posiciones pares (bit: ${previousBit} -> ${newBit})`;
-            break;
-          case "Password Shift":
-            operationDescription = `Desplazamiento inverso circular por la suma de los valores ASCII de la contraseña (${pass})`;
-            break;
-          case "Alternate XOR":
-            operationDescription = `XOR alterno inverso con (bit: ${previousBit} XOR ${
-              pass.charCodeAt(0) % 2 ^ (index % 2 === 0 ? 0 : 1)
-            }) usando el primer carácter de la contraseña (${pass.charAt(0)})`;
-            break;
-          default:
-            operationDescription = `Operación desconocida`;
-        }
+      // Descripción de la operación realizada
+      let operationDescription = "";
+      switch (method.name) {
+        case "XOR":
+          operationDescription = `XOR inverso con (bit: ${previousBit} XOR ${
+            pass.charCodeAt(0) % 2
+          }) usando el primer carácter de la contraseña (${pass.charAt(0)})`;
+          break;
+        case "Suma Mod 2":
+          operationDescription = `Resta mod 2 con (bit: ${previousBit} - ${
+            pass.charCodeAt(0) % 2
+          } % 2) usando el primer carácter de la contraseña (${pass.charAt(
+            0
+          )})`;
+          break;
+        case "Rotación":
+          operationDescription = `Rotación inversa ${
+            pass.charCodeAt(0) % 2 === 1 ? "izquierda" : "derecha"
+          } basada en el primer carácter de la contraseña (${pass.charAt(0)})`;
+          break;
+        case "Inversión":
+          operationDescription = `Inversión inversa ${
+            pass.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 2 ===
+            1
+              ? "realizada"
+              : "no realizada"
+          } según la suma de los valores ASCII de la contraseña (${pass})`;
+          break;
+        case "Permutación":
+          operationDescription = `Permutación inversa basada en los valores ASCII de la contraseña (${pass})`;
+          break;
+        case "Shift Left":
+          operationDescription = `Desplazamiento inverso a la derecha (bit: ${previousBit} -> ${newBit})`;
+          break;
+        case "Shift Right":
+          operationDescription = `Desplazamiento inverso a la izquierda (bit: ${previousBit} -> ${newBit})`;
+          break;
+        case "Inversión por Pares":
+          operationDescription = `Intercambio inverso de bits por pares (bit: ${previousBit} -> ${newBit})`;
+          break;
+        case "Suma Alterna":
+          operationDescription = `Resta -1 en posiciones pares (bit: ${previousBit} -> ${newBit})`;
+          break;
+        case "Password Shift":
+          operationDescription = `Desplazamiento inverso circular por la suma de los valores ASCII de la contraseña (${pass})`;
+          break;
+        case "Alternate XOR":
+          operationDescription = `XOR alterno inverso con (bit: ${previousBit} XOR ${
+            pass.charCodeAt(0) % 2 ^ (index % 2 === 0 ? 0 : 1)
+          }) usando el primer carácter de la contraseña (${pass.charAt(0)})`;
+          break;
+        default:
+          operationDescription = `Operación desconocida`;
+      }
+      resultText += `Paso ${
+        index + 1
+      }:\n${previousBit} ${operationDescription} = ${newBit}\n\n`;
+    });
 
-        // Agrega la operación realizada al resultText
-        resultText += `Paso ${
-          methods.length - index
-        }: \n${previousBit} ${operationDescription} = ${newBit}\n\n`;
-      });
     // Convertir el array de bits de vuelta a bytes
     const newBytes = bitsToBytes(decryptedBits);
-    // Actualizar el contexto con los nuevos bytes descifrados para que AsciiHexTable se actualice
+    resultText += "Resultado final (bytes): " + newBytes.join(", ");
     updateAllItems(newBytes);
     setDecryptedBytes(newBytes);
     setLog(resultText);
   };
 
   const handleGuardar = () => {
-    // Crear un Blob con los bytes descifrados y descargarlo
     const blob = new Blob([new Uint8Array(decryptedBytes)], {
       type: "application/octet-stream",
     });
@@ -251,9 +236,7 @@ const DescifrarPage = () => {
           className="border px-2 py-1 bg-gray-800 text-white"
         />
       </div>
-      {/* Componente reutilizable para visualizar y editar los bytes */}
       <AsciiHexTable />
-      {/* Botones para descifrar y guardar */}
       <div className="flex justify-center mt-4 space-x-4">
         <button
           onClick={handleDescifrar}
@@ -268,7 +251,6 @@ const DescifrarPage = () => {
           Guardar Archivo
         </button>
       </div>
-      {/* Mostrar el log del proceso de descifrado */}
       <div className="mt-6 p-4 bg-gray-800 rounded text-sm">
         <Bitacora resultText={log} />
       </div>
