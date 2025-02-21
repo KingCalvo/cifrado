@@ -256,7 +256,7 @@ const DescifrarPage = () => {
         </button>
       </div>
       <div className="mt-6 p-4 bg-gray-800 rounded text-sm">
-        <Bitacora resultText={log} />
+        <Bitacora resultText={log} onClear={() => setLog("")} />
       </div>
     </div>
   );

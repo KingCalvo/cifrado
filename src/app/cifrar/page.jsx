@@ -260,7 +260,7 @@ const CifrarPage = () => {
       </div>
       {/* Mostrar el log del proceso de cifrado */}
       <div className="mt-6 p-4 bg-gray-800 rounded text-sm">
-        <Bitacora resultText={log} />
+        <Bitacora resultText={log} onClear={() => setLog("")} />
       </div>
     </div>
   );
