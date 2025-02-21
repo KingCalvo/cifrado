@@ -23,7 +23,7 @@ const DocumentForm = () => {
         const arrayBuffer = reader.result;
         const byteArray = new Uint8Array(arrayBuffer); // Convierte en array de bytes
 
-        addArray(byteArray)
+        addArray(byteArray);
 
         console.log(
           "Archivo convertido y bytes añadidos al contexto:",
@@ -44,28 +44,35 @@ const DocumentForm = () => {
     clearItems(); // Borra todos los elementos del contexto
     console.log("Archivo eliminado y contexto limpiado");
   };
-  
 
   return (
-    <section className="w-full h-screen flex justify-center items-end">
+    <section className="w-full h-screen flex justify-center items-center">
       <form
         onSubmit={handleSubmit}
         className="min-w-[300px] max-w-[700px] bg-slate-600 h-[500px] rounded-2xl p-8 mb-8 flex flex-col justify-center items-center gap-8"
       >
         <div className="flex flex-col justify-center items-center gap-8">
-          <label htmlFor="document" className="bg-slate-400 w-36 h-36 rounded-2xl cursor-pointer hover:font-bold hover:scale-110 hover:border-2 hover:border-white transition-all flex flex-col justify-center items-center" >
+          <label
+            htmlFor="document"
+            className="bg-slate-400 w-36 h-36 rounded-2xl cursor-pointer hover:font-bold hover:scale-110 hover:border-2 hover:border-white transition-all flex flex-col justify-center items-center"
+          >
             <FaFileDownload className="text-4xl w-5/6" />
             <p>Subir documento</p>
           </label>
-          <span className={`text-center text-2xl font-semibold ${
-            fileName ? "text-green-500" : "text-red-500"
-          }`}> 
-            {fileName ? fileName: "No se ha seleccionado un archivo"}
+          <span
+            className={`text-center text-2xl font-semibold ${
+              fileName ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {fileName ? fileName : "No se ha seleccionado un archivo"}
           </span>
-          <span>
-            {items.length} bytes cargados
-          </span>
-          <input type="file" id="document" onChange={handleFileChange} className="hidden" />
+          <span>{items.length} bytes cargados</span>
+          <input
+            type="file"
+            id="document"
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
         <button
           type="submit"
