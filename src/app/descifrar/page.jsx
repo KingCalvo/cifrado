@@ -113,7 +113,7 @@ const methods = [
 ];
 
 const DescifrarPage = () => {
-  const { items, updateAllItems } = useArray();
+  const { items, updateAllItems, fileName, fileType } = useArray();
   const { password, updatePassword } = usePassword();
   const [localPassword, setLocalPassword] = useState(password);
   const [log, setLog] = useState("");
@@ -206,13 +206,17 @@ const DescifrarPage = () => {
   };
 
   const handleGuardar = () => {
+    const outputName = fileName
+      ? "descifrado_" + fileName
+      : "archivo_descifrado.bin";
+    const outputType = fileType || "application/octet-stream";
     const blob = new Blob([new Uint8Array(decryptedBytes)], {
-      type: "application/octet-stream",
+      type: outputType,
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "archivo_descifrado.bin";
+    a.download = outputName;
     a.click();
     URL.revokeObjectURL(url);
   };

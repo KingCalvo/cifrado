@@ -104,7 +104,7 @@ const methods = [
 ];
 
 const CifrarPage = () => {
-  const { items, updateAllItems } = useArray();
+  const { items, updateAllItems, fileName, fileType } = useArray();
   const { password, updatePassword } = usePassword();
   const [localPassword, setLocalPassword] = useState(password);
   const [log, setLog] = useState("");
@@ -208,14 +208,16 @@ const CifrarPage = () => {
   };
 
   const handleGuardar = () => {
-    // Crear un Blob con los bytes cifrados para descargarlo como archivo
+    // Supongamos que tienes fileName y fileType disponibles desde el contexto o props
+    const outputName = fileName ? "cifrado_" + fileName : "archivo_cifrado.bin";
+    const outputType = fileType || "application/octet-stream";
     const blob = new Blob([new Uint8Array(encryptedBytes)], {
-      type: "application/octet-stream",
+      type: outputType,
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "archivo_cifrado.bin";
+    a.download = outputName;
     a.click();
     URL.revokeObjectURL(url);
   };

@@ -6,12 +6,14 @@ import { FaFileDownload } from "react-icons/fa";
 const DocumentForm = () => {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
-  const { addItem, clearItems, items, addArray } = useArray();
+  const { addItem, addFileData, clearItems, items, addArray } = useArray();
+  const [fileType, setFileType] = useState("");
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
     setFileName(selectedFile ? selectedFile.name : "");
+    setFileType(selectedFile ? selectedFile.type : "");
   };
 
   const handleSubmit = (event) => {
@@ -23,12 +25,9 @@ const DocumentForm = () => {
         const arrayBuffer = reader.result;
         const byteArray = new Uint8Array(arrayBuffer); // Convierte en array de bytes
 
-        addArray(byteArray);
+        addFileData(byteArray, file.name, file.type);
 
-        console.log(
-          "Archivo convertido y bytes añadidos al contexto:",
-          byteArray
-        );
+        console.log("Archivo cargado:", file.name, "Tipo:", file.type);
       };
       reader.onerror = (error) => {
         console.error("Error al leer el archivo:", error);
