@@ -1,1 +1,46 @@
 La seguridad web se refiere a las prácticas y medidas implementadas para proteger un sitio web contra ataques maliciosos, actividades fraudulentas y acceso no autorizado.
+Este proyecto es una aplicación web orientada a la seguridad y el procesamiento de 
+archivos, que permite a los usuarios cargar documentos, visualizar su contenido en 
+formato de bytes y aplicar operaciones de cifrado, descifrado y hashing. La herramienta 
+está desarrollada con tecnologías modernas como React, Next.js y Tailwind CSS, lo 
+que garantiza una interfaz de usuario responsiva y un rendimiento óptimo incluso al 
+trabajar con archivos de hasta 10,000 bytes. 
+La aplicación cuenta con un componente central para la visualización de bytes en 
+formato ASCII y hexadecimal, permitiendo al usuario inspeccionar y editar los datos de 
+forma interactiva. Este visor de bytes facilita la comprensión del proceso interno de 
+cifrado y descifrado, al mismo tiempo que ofrece herramientas para una manipulación 
+precisa del contenido en memoria. La capacidad de sincronizar las modificaciones 
+entre ambas representaciones mejora la experiencia del usuario y la claridad del 
+proceso. 
+El módulo de cifrado se encarga de transformar el contenido del archivo mediante una 
+serie de operaciones matemáticas y lógicas que garantizan la seguridad de los datos. 
+Los métodos implementados incluyen operaciones como XOR, rotaciones y 
+permutaciones, además de otros algoritmos personalizados que aseguran que el 
+proceso sea reversible solo con la contraseña correcta. Esta funcionalidad permite que, 
+al aplicar el proceso inverso, el archivo original pueda ser recuperado de manera 
+íntegra. 
+Por otro lado, el componente de hashing se ha diseñado para generar una "huella 
+digital" única del archivo, siguiendo un proceso de seis pasos completamente 
+personalizado y diferente a los métodos convencionales. Este proceso garantiza que 
+cualquier modificación mínima en el contenido produzca un hash totalmente distinto, lo 
+que sirve como un mecanismo confiable para verificar la integridad y autenticidad de 
+los archivos. En conjunto, el proyecto ofrece una solución integral para la manipulación 
+segura de datos, combinando técnicas de cifrado y verificación con una interfaz intuitiva 
+y moderna.
+
+Este proyecto demuestra la efectividad de combinar tecnologías web modernas con algoritmos 
+personalizados para garantizar la seguridad y la integridad de la información. La 
+implementación de componentes interactivos que permiten la visualización, cifrado, descifrado 
+y hashing de archivos refuerza la importancia de la manipulación precisa de datos a nivel 
+binario, permitiendo a los usuarios comprender y controlar cada paso del proceso. 
+La integración de operaciones matemáticas y lógicas en los módulos de cifrado y hashing 
+garantiza que los datos permanezcan protegidos y sean fácilmente verificables, siempre que se 
+conozca la contraseña correcta. Este enfoque personalizado no solo ofrece un alto grado de 
+seguridad, sino que también proporciona una herramienta educativa para explorar los 
+fundamentos de la criptografía y la seguridad web en un entorno práctico. 
+En conclusión, el proyecto no solo cumple con los objetivos de transformar y proteger archivos, 
+sino que también sirve como base para futuros desarrollos en el ámbito de la seguridad digital. 
+La experiencia adquirida en la implementación de estos algoritmos y la gestión de datos 
+binarios sienta las bases para explorar técnicas avanzadas de encriptación y verificación en 
+aplicaciones reales, consolidando un aprendizaje sólido y aplicable en el mundo de la 
+tecnología.

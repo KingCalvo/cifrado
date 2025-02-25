@@ -1,1 +1,65 @@
-Vegetta777 es el mejor youtuber de la vida
+SafeBridge es un sistema inteligente de monitoreo y control de inundaciones en puentes, que utiliza tecnologías avanzadas para detectar niveles de agua peligrosos y activar mecanismos automáticos de seguridad. 
+
+Al identificar un incremento crítico en el nivel del agua, SafeBridge activa alarmas y barreras automáticas para restringir el acceso, notificando a las autoridades en tiempo real para una respuesta inmediata. Además, recopila y analiza datos para predecir posibles inundaciones y mejorar la planificación de emergencias.
+
+Las inundaciones en puentes representan un grave peligro para conductores y peatones, ya que pueden ocurrir repentinamente, bloqueando el paso y poniendo en riesgo la vida de las personas.
+
+La falta de un sistema automatizado para la detección temprana y el cierre preventivo de accesos genera demoras en la respuesta de las autoridades y aumenta la posibilidad de accidentes y daños materiales.
+
+Tecnologías o herramientas:
+Programación de los sensores y controladores con C++
+Análisis de datos e Inteligencia Artificial: TensorFlow
+Base de datos en Supabase
+Integración con sistemas de alerta
+
+Azael: 
+Si no conozco el método de cifrado ni la contraseña, la única opción sería un ataque de fuerza 
+bruta, probando todas las combinaciones posibles hasta encontrar la correcta. Sin embargo, 
+esto no sería viable si la clave es suficientemente larga y compleja. 
+Si conociera el algoritmo, aunque no tuviera la contraseña, podría analizar su funcionamiento 
+para identificar posibles debilidades. En ese caso, intentaría optimizar un ataque de fuerza 
+bruta, reduciendo la cantidad de pruebas necesarias o buscando una forma de predecir partes 
+de la clave. 
+José: 
+Sin conocer el proceso de cifrado, se podría analizar estadísticamente el texto cifrado en busca 
+de patrones que revelen información sobre la estructura de los datos originales. Esto podría 
+ayudar a reducir las posibles claves. 
+Si tuviera acceso a los pasos de cifrado, aunque no conociera la contraseña, intentaría revertir 
+parcialmente el proceso o buscar debilidades en la forma en que transforma los datos. Si el 
+algoritmo no es suficientemente seguro, esto podría permitir descifrar información sin 
+necesidad de probar todas las claves posibles. 
+Enrique: 
+Sin conocer los detalles del cifrado, un ataque de colisión podría ser útil si el algoritmo de hash 
+tiene fallos en su dispersión. Esto permitiría encontrar dos entradas diferentes que produzcan el 
+mismo hash, lo que podría ser explotado. 
+Si conociera el algoritmo pero no la contraseña, intentaría generar tablas precalculadas, como 
+tablas arcoíris, para buscar coincidencias con hashes conocidos y reducir el tiempo necesario 
+para descifrar la información. 
+Rogelio: 
+Si no supiera cómo se cifran los datos, intentaría detectar patrones en la estructura del texto 
+cifrado, lo que podría dar pistas sobre el tipo de cifrado utilizado. También exploraría si existen 
+relaciones entre fragmentos del texto cifrado y posibles entradas originales. 
+Si conociera el método de cifrado, me enfocaría en analizar su estructura matemática para 
+identificar debilidades en la transformación de datos, como problemas en la difusión o falta de 
+aleatoriedad en la generación de claves. 
+Sergio: 
+Si no tuviera información sobre el cifrado ni la clave, una estrategia sería usar un ataque de 
+diccionario, probando contraseñas comunes para reducir el número de intentos necesarios. 
+Esto funcionaría si la clave no es suficientemente aleatoria. 
+Si supiera cómo funciona el cifrado pero no la contraseña, podría analizar su resistencia a 
+ataques de texto elegido, es decir, alimentar el sistema con entradas controladas y estudiar el 
+efecto en la salida para encontrar patrones explotables. 
+Aramiz: 
+Una forma de intentar romper el cifrado sin conocer su funcionamiento sería usando un análisis 
+de tiempo, midiendo cuánto tarda en procesar diferentes entradas. Si hay variaciones en los 
+tiempos de respuesta, podrían revelar información sobre la clave. 
+Si conociera los pasos del cifrado pero no la clave, analizaría la entropía del algoritmo para 
+detectar si existen valores que se repiten o generan salidas predecibles. Cualquier irregularidad 
+en la distribución de datos podría ayudar a reducir el número de claves posibles. 
+Sarai: 
+Si no tuviera información sobre el cifrado ni la clave, intentaría obtener múltiples textos cifrados 
+generados con entradas similares. Un análisis diferencial podría revelar patrones en la salida, 
+facilitando la identificación de posibles debilidades. 
+Si supiera el algoritmo de cifrado pero no la clave, intentaría encontrar colisiones, es decir, 
+diferentes entradas que produzcan el mismo resultado. Si el algoritmo no maneja 
+correctamente la aleatoriedad, esto podría facilitar la recuperación de la clave

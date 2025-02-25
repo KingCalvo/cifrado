@@ -1,1 +1,115 @@
-Esto es una prueba de funcionamiento o algo asi
+¿Qué es la seguridad web?
+La seguridad web consiste en cada acción o herramienta adoptada para evitar que las informaciones sean expuestas o propensas a ataques por parte de cibercriminales.
+
+Esas medidas también sirven para proteger a los usuarios, como los clientes de ecommerce y los lectores de blogs, e incluso al host.
+
+Los ataques cibercriminales pueden ocurrir de varias maneras y, en los siguientes tópicos, explicaremos los principales y qué consecuencias traen a tu sitio web o blog.
+
+Ataques DDoS
+Esos ataques pueden bloquear completamente el sitio web o hacerlo extremadamente lento, haciendo que el acceso sea inviable para los visitantes.
+
+Malware
+Este es un software malicioso, una amenaza muy común que se utiliza para distribuir spam, para permitir a los cibercriminales acceder al sitio, robar datos confidenciales de los clientes, entre otras cosas.
+
+Blacklist
+El sitio puede ser eliminado de los resultados de los motores de búsqueda, como Google, si encuentran algún malware. En ese caso, se muestra una advertencia que puede alejar a los visitantes de tus páginas, por la mala experiencia de navegación.
+Explotaciones de vulnerabilidad
+En este caso, los cibercriminales buscan debilidades o vulnerabilidades en los sitios web y usan esta brecha para obtener acceso a él. Un buen ejemplo de cómo puede suceder esto es a través de plugins desactualizados.
+
+Desfiguración
+Aquí, el ataque reemplaza todo el contenido que has publicado por otro malicioso, enviado por el hacker.
+
+¿Cómo puedes mantener la seguridad de tu sitio web?
+Existen buenas prácticas que ayudan a aumentar la seguridad del sitio web. A continuación, enumeramos algunos consejos relacionados con ellas.
+
+Mantén al WordPress actualizado
+Asegurarte de que todo el software esté actualizado es crucial para mantener seguro tu sitio web.
+
+Esto se aplica al sistema operativo del servidor y a cualquier software que esté ejecutando en el sitio web, como un CMS. Recuerda que los hackers explotan las brechas de seguridad web en el sitio para realizar ataques.
+
+Sin embargo, si estás utilizando una solución de hospedaje, no tienes que preocuparse por realizar estas actualizaciones de seguridad, ya que es responsabilidad de la empresa contratada.
+
+Crea contraseñas fuertes
+Parece obvio ofrecer un consejo como ese, ya que muchas personas saben que deben usar contraseñas complejas, pero eso no significa que esta práctica siempre se adopte.
+
+Es esencial utilizar contraseñas fuertes para los perfiles de administración de servidores y sitios web, pero también es muy importante informar a los usuarios sobre las buenas prácticas que han ayudado a garantizar la seguridad web de la cuenta.
+
+A pesar de que muchas personas lo consideran aburrido, la creación de requisitos de contraseña es una estrategia que ayuda en la protección de las informaciones.
+
+Un ejemplo muy clásico de cómo funcionan esos criterios es la solicitud de contraseña con más de seis caracteres, incluidos un número y una letra mayúscula.
+
+Configura perfiles de usuario
+Incluso si las personas mal intencionadas no puedan cambiar el código de tu sitio web, pueden hacerlo con registros de usuarios.
+
+Si tienes las direcciones IP registradas, con los respectivos historiales de actividad, será más fácil hacer un análisis del ataque sufrido.
+
+Un gran aumento en el número de usuarios registrados, por ejemplo, puede indicar una falla en el procedimiento de registro, permitiendo que los spammers llenen el sitio con contenido falso.
+
+Haz backup de WordPress
+Si tu sitio sufre un ataque hacker, es el backup que te ayudará a recuperar los datos perdidos en el incidente.
+
+No es realmente una estrategia de seguridad, ya que no es responsable de inhibir los ataques, pero ayuda a prevenir la pérdida permanente de archivos y carpetas.
+
+Apuesta en la autenticación en dos pasos
+En la verificación en dos pasos, la validación se realiza tanto en el navegador como en el servidor. El primero puede identificar fallas más simples, como ciertos campos obligatorios que no se han completado.
+
+Sin embargo, eso puede ignorarse y lo ideal es verificar las validaciones en el servidor. Si no se hace eso, es posible que se inserte algún código malicioso en la base de datos, lo que puede tener consecuencias indeseables en el sitio web.
+
+¿Qué plugins se pueden usar en la seguridad de WordPress?
+Cuando se busca sobre como crear un blog, también es necesario comprender cómo se puede mejorar su seguridad web y qué herramientas pueden ayudar. Este es el caso de los plugins. Mostraremos los principales en los próximos tópicos.
+
+Sucuri Security
+El plugin de WordPress de Sucuri Security es gratuito y uno de los mejores para todos los usuarios de la plataforma. Es un conjunto de seguridad destinado a complementar la seguridad ya existente en el sitio.
+
+Ofrece a los usuarios una serie de características de seguridad web que ayudan a hacer que el sitio sea más seguro.
+
+Entre ellos están:
+
+auditoría de actividades de seguridad;
+monitorear la integridad del archivo;
+verificación remota de malware;
+monitoreo de listas negras;
+acciones de seguridad posteriores al hack;
+notificaciones de seguridad.
+Wordfence Security
+Consiste en uno de los plugins de seguridad web más conocidos. No es por menos, ya que tiene recursos potentes, como login seguro, al mismo tiempo que ofrece simplicidad a los usuarios.
+
+Además, también muestra ideas de tendencias de tráfico y posibles intentos de atacar tu sitio.
+
+All In One WP Security & Firewall
+All In One WordPress Security and Firewall es uno de los mejores plugins y aumenta el nivel de seguridad de tu sitio web. Ofrece las últimas técnicas de seguridad web y las mejores prácticas, de acuerdo con las recomendaciones de WordPress.
+
+Los recursos son fáciles de usar y se han desarrollado completamente con un enfoque en los usuarios. Por lo tanto, no necesitas comprender reglas complejas para aplicarlas al sitio.
+
+Jetpack
+Es un plugin desarrollado por WordPress y, por lo tanto, muchas personas que usan la plataforma ya están familiarizadas con él. La herramienta de Jetpack ofrece módulos que ayudan a acelerar el sitio web y protegerlo del spam, por ejemplo.
+
+iThemes Security
+La solución es muy completa y ofrece varias características que ayudan a proteger el sitio contra intrusos y ataques de cibercriminales.
+
+Está más dirigido a identificar problemas como contraseñas débiles, plugins vulnerables o incluso softwares que ya se han vuelto obsoletos, aspectos que se convierten en grandes brechas.
+
+VaultPress
+El funcionamiento de VaultPress es similar al de Sucuri Security e iThemes Security. A pesar de ser una herramienta paga, ese plugin es uno de los más accesibles y ofrece planes que abarcan desde pequeños blogs hasta grandes empresas.
+
+Google Authenticator: Two Factor Authentication
+Hablamos anteriormente sobre la importancia de la autenticación de dos factores y es el plugin Google Authenticator el que ofrece esa posibilidad. Puedes usarlo junto con otra herramienta para fortalecer aún más la seguridad de tu sitio web.
+
+¿Qué certificados de seguridad necesita tu sitio web?
+El certificado de seguridad viene con el propio host, el servicio que aloja tu sitio web. Sin embargo, puedes elegir alternativas para servicios más complejos, como de los bancos. Conoce los principales a continuación.
+
+Validación de Domínio / Domain Validated (DV SSL)
+Ese certificado es responsable de mostrar aquel icono de candado en la barra de direcciones. De esa forma, el usuario puede identificar si la página que está visitando es realmente segura.
+
+Es una forma económica y rápida de implementar SSL, ya que la activación se realiza en cuestión de minutos después de la contratación hecha.
+
+Validación de organización / Organization Validated (OV SSL)
+Si tienes una pequeña empresa que está comenzando ahora en el entorno digital, como el ecommerce, puedes invertir en este certificado para mostrar a los usuarios que el sitio pertenece a una empresa que realmente existe, lo que aumenta la confiabilidad.
+
+Validación extendida / Extended Validation (EV SSL)
+Este certificado valida los datos básicos de la empresa, como el nombre de la empresa, el CNPJ y la ubicación, además de mostrar el candado de seguridad web en la barra de dirección y las otras características mencionadas en certificaciones anteriores.
+
+Vale la pena mencionar que tiene un espacio al lado de la barra de dirección para mostrar el nombre corporativo de la compañía.
+
+SSL Wildcard
+Es adecuado para aquellos que tienen subdominios, como tener un sitio web y un blog — por ejemplo, dominio.com.es y blog.dominio.com.es. Se pueden incluir sin que tengas que pagar costos adicionales.
