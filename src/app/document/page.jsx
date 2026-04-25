@@ -1,51 +1,79 @@
 "use client";
 import { useState } from "react";
-import { useArray } from "../context/ArrayContext"; // Se importa el contexto
+import { useArray } from "../context/ArrayContext";
 import { FaFileDownload } from "react-icons/fa";
 
 const DocumentForm = () => {
   const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("");
-  const { addItem, addFileData, clearItems, items, addArray } = useArray();
-  const [fileType, setFileType] = useState("");
+  const { setArray, clearItems, items, fileName, setFileName, setFileType } =
+    useArray();
+
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
-    setFileName(selectedFile ? selectedFile.name : "");
-    setFileType(selectedFile ? selectedFile.type : "");
+
+    if (selectedFile) {
+      setFileName(selectedFile.name);
+      setFileType(selectedFile.type);
+    }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(file);
-      reader.onload = () => {
-        const arrayBuffer = reader.result;
-        const byteArray = new Uint8Array(arrayBuffer); // Convierte en array de bytes
 
-        addFileData(byteArray, file.name, file.type);
+    if (!file) return;
 
-        console.log("Archivo cargado:", file.name, "Tipo:", file.type);
-      };
-      reader.onerror = (error) => {
-        console.error("Error al leer el archivo:", error);
-      };
-    } else {
-      console.log("Documento no seleccionado");
-    }
+    setLoading(true);
+    setProgress(0);
+
+    const reader = new FileReader();
+
+    reader.readAsArrayBuffer(file);
+
+    reader.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        setProgress(percent);
+      }
+    };
+
+    reader.onload = () => {
+      const byteArray = new Uint8Array(reader.result);
+
+      setArray(byteArray);
+
+      setLoading(false);
+    };
+
+    reader.onerror = () => {
+      setLoading(false);
+      alert("Error al leer archivo");
+    };
   };
 
   const handleDelete = () => {
     setFile(null);
     setFileName("");
-    clearItems(); // Borra todos los elementos del contexto
+    clearItems();
     console.log("Archivo eliminado y contexto limpiado");
   };
 
   return (
     <section className="w-full h-screen flex justify-center items-center">
+      {loading && (
+        <div className="fixed inset-0 bg-black/70 flex flex-col items-center justify-center z-50">
+          <div className="w-64 bg-gray-700 rounded-full h-4 overflow-hidden">
+            <div
+              className="bg-blue-500 h-4 transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <p className="text-white mt-4">{progress}%</p>
+        </div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="min-w-[300px] max-w-[700px] bg-slate-600 h-[500px] rounded-2xl p-8 mb-8 flex flex-col justify-center items-center gap-8"
@@ -80,7 +108,7 @@ const DocumentForm = () => {
           Cargar Bytes
         </button>
         <button
-          type="submit"
+          type="button"
           onClick={handleDelete}
           className="bg-red-700 rounded-xl px-6 py-4 text-xl hover:scale-110 hover:border-white hover:border-2 hover:transition-all"
         >

@@ -1,77 +1,58 @@
-"use client"; // Agrega esta línea arriba de todo
+"use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useMemo } from "react";
 
-// 1. Crear el contexto
+// Crear el contexto
 const ArrayContext = createContext();
 
-// 2. Proveedor del contexto
+// Proveedor del contexto
 export const ArrayProvider = ({ children }) => {
-  const [items, setItems] = useState([]);
-  const [fileName, setFileName] = useState(""); // Nombre del archivo
-  const [fileType, setFileType] = useState(""); // Tipo MIME del archivo
+  const [items, setItems] = useState(new Uint8Array());
+  const [fileName, setFileName] = useState("");
+  const [fileType, setFileType] = useState("");
 
-  // Función para agregar un elemento al array
-  const addItem = (item) => {
-    setItems((prevItems) => [...prevItems, item]);
+  // Establecer array completo
+  const setArray = (newArray) => {
+    setItems(newArray);
   };
 
-  // Función para eliminar un elemento por índice
-  const removeItem = (index) => {
-    setItems((prevItems) => prevItems.filter((_, i) => i !== index));
-  };
-
-  // Función para agregar un array de bytes y metadatos del archivo
-  const addFileData = (byteArray, name, type) => {
-    setItems(byteArray);
-    setFileName(name);
-    setFileType(type);
-  };
-
-  // Función para actualizar un elemento del array
+  // Actualizar un elemento
   const updateItem = (index, newValue) => {
-    setItems((prevItems) => {
-      const updated = [...prevItems];
+    setItems((prev) => {
+      if (index < 0 || index >= prev.length) return prev;
+      const updated = [...prev];
       updated[index] = newValue;
       return updated;
     });
   };
 
-  const updateAllItems = (newItems) => {
-    setItems(newItems);
-  };
-
+  // Limpiar todo
   const clearItems = () => {
     setItems([]);
     setFileName("");
     setFileType("");
   };
 
-  const addArray = (array) => {
-    setItems(array);
-  };
+  // Valor memoizado
+  const value = useMemo(
+    () => ({
+      items,
+      setArray,
+      updateItem,
+      clearItems,
+      fileName,
+      setFileName,
+      fileType,
+      setFileType,
+    }),
+    [items, fileName, fileType],
+  );
 
   return (
-    <ArrayContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        updateItem,
-        updateAllItems,
-        clearItems,
-        fileName,
-        fileType,
-        addFileData,
-        addArray,
-      }}
-    >
-      {children}
-    </ArrayContext.Provider>
+    <ArrayContext.Provider value={value}>{children}</ArrayContext.Provider>
   );
 };
 
-// 3. Hook personalizado para usar el contexto
 export const useArray = () => {
   return useContext(ArrayContext);
 };

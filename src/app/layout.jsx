@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Nav />
-        <main className="w-full h-screen">
+        <main className="w-full min-h-screen">
           <ArrayProvider>
             <PasswordProvider>{children}</PasswordProvider>
           </ArrayProvider>

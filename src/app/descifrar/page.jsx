@@ -1,218 +1,113 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import AsciiHexTable from "../components/AsciiHexTable";
-import Bitacora from "../components/Bitacora";
 import { useArray } from "../context/ArrayContext";
 import { usePassword } from "../context/Password";
-
-// Convertir entre bytes y bits
-const bytesToBits = (bytes) => {
-  const bits = [];
-  bytes.forEach((byte) => {
-    const binStr = byte.toString(2).padStart(8, "0");
-    binStr.split("").forEach((bit) => {
-      bits.push(parseInt(bit, 10));
-    });
-  });
-  return bits;
-};
-
-const bitsToBytes = (bits) => {
-  const bytes = [];
-  for (let i = 0; i < bits.length; i += 8) {
-    let byteBits = bits.slice(i, i + 8);
-    while (byteBits.length < 8) byteBits.push(0);
-    const byte = parseInt(byteBits.join(""), 2);
-    bytes.push(byte);
-  }
-  return bytes;
-};
-
-// Métodos de descifrado (ya definidos en el orden inverso al cifrado)
-function xorDecrypt(bits, password) {
-  return bits.map((b, i) => b ^ password.charCodeAt(i % password.length) % 2);
-}
-function sumMod2Decrypt(bits, password) {
-  return bits.map(
-    (b, i) => (b + (password.charCodeAt(i % password.length) % 2)) % 2
-  );
-}
-function rotateDecrypt(bits, password) {
-  // Recorre la contraseña en orden inverso para revertir la rotación
-  let arr = [...bits];
-  for (let c of [...password].reverse()) {
-    arr = rotate(arr, c.charCodeAt(0) % 2 === 0);
-  }
-  return arr;
-}
-function rotate(bits, right = true) {
-  return right
-    ? [bits[bits.length - 1], ...bits.slice(0, -1)]
-    : [...bits.slice(1), bits[0]];
-}
-function blockReverseDecrypt(bits, password) {
-  return blockReverseEncrypt(bits, password);
-}
-function blockReverseEncrypt(bits, password) {
-  return password.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 2 ===
-    1
-    ? bits.reverse()
-    : bits;
-}
-function permuteDecrypt(bits, password) {
-  let indices = [...bits.keys()];
-  indices.sort(
-    (a, b) =>
-      (password.charCodeAt(a % password.length) % bits.length) -
-      (password.charCodeAt(b % password.length) % bits.length)
-  );
-  let original = new Array(bits.length);
-  indices.forEach((idx, i) => {
-    original[idx] = bits[i];
-  });
-  return original;
-}
-const shiftLeftDecrypt = (bits) => [
-  bits[bits.length - 1],
-  ...bits.slice(0, -1),
-];
-const shiftRightDecrypt = (bits) => [...bits.slice(1), bits[0]];
-const pairReverseDecrypt = (bits) => {
-  let arr = [...bits];
-  for (let i = 0; i < arr.length - 1; i += 2)
-    [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-  return arr;
-};
-const altSumDecrypt = (bits) =>
-  bits.map((b, i) => (i % 2 === 0 ? (b + 1) % 2 : b));
-const passwordShiftDecrypt = (bits, password) => {
-  const shift =
-    password.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
-    bits.length;
-  return [...bits.slice(shift), ...bits.slice(0, shift)];
-};
-const altXorDecrypt = (bits, password) =>
-  bits.map(
-    (b, i) =>
-      b ^ (password.charCodeAt(i % password.length) % 2 ^ (i % 2 === 0 ? 0 : 1))
-  );
-
-// Lista de métodos de descifrado en el orden inverso al aplicado en cifrado
-const methods = [
-  { name: "Alternate XOR", decrypt: altXorDecrypt },
-  { name: "Password Shift", decrypt: passwordShiftDecrypt },
-  { name: "Suma Alterna", decrypt: altSumDecrypt },
-  { name: "Inversión por Pares", decrypt: pairReverseDecrypt },
-  { name: "Shift Right", decrypt: shiftRightDecrypt },
-  { name: "Shift Left", decrypt: shiftLeftDecrypt },
-  { name: "Permutación", decrypt: permuteDecrypt },
-  { name: "Inversión", decrypt: blockReverseDecrypt },
-  { name: "Rotación", decrypt: rotateDecrypt },
-  { name: "Suma Mod 2", decrypt: sumMod2Decrypt },
-  { name: "XOR", decrypt: xorDecrypt },
-];
+import { verifyHMAC, decryptFile } from "../utils/crypto/crypto";
+import { Eye, EyeOff } from "lucide-react";
 
 const DescifrarPage = () => {
-  const { items, updateAllItems, fileName, fileType } = useArray();
-  const { password, updatePassword } = usePassword();
-  const [localPassword, setLocalPassword] = useState(password);
-  const [log, setLog] = useState("");
-  const [decryptedBytes, setDecryptedBytes] = useState([]);
+  const { items, setArray, fileName, fileType, setFileName, setFileType } =
+    useArray();
 
-  const handleDescifrar = () => {
-    // Verificar que se haya ingresado una contraseña de 4 caracteres
-    if (!localPassword || localPassword.trim().length !== 4) {
-      setLog("La contraseña debe tener exactamente 4 caracteres.");
+  const { password, updatePassword } = usePassword();
+
+  const [localPassword, setLocalPassword] = useState(password);
+  const [loading, setLoading] = useState(false);
+  const [isDecrypted, setIsDecrypted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+
+  // Detectar cifrado
+  const isEncrypted = useMemo(() => {
+    if (!items || items.length < 4) return false;
+
+    try {
+      const data = new Uint8Array(items);
+      const magic = new TextDecoder().decode(data.slice(0, 4));
+      return magic === "ECF1";
+    } catch {
+      return false;
+    }
+  }, [items]);
+
+  const handleDecrypt = async () => {
+    if (passwordError || localPassword.length < 12) return;
+
+    if (!items.length) {
+      alert("No hay datos");
       return;
     }
 
-    // Convertir el array de bytes actual a bits
-    const bits = bytesToBits(items);
-    let decryptedBits = [...bits];
-    let resultText = "\nPrimer bit (original): " + decryptedBits[0] + "\n\n";
-    const pass = localPassword;
+    if (!isEncrypted) {
+      alert("El archivo no está cifrado");
+      return;
+    }
 
-    // Aplicar cada método de descifrado en el orden definido (ya está en orden inverso)
-    methods.forEach((method, index) => {
-      const previousBit = decryptedBits[0]; // Guarda el primer bit antes de la operación
-      decryptedBits = method.decrypt(decryptedBits, pass);
-      const newBit = decryptedBits[0];
+    setLoading(true);
 
-      // Descripción de la operación realizada
-      let operationDescription = "";
-      switch (method.name) {
-        case "XOR":
-          operationDescription = `XOR inverso con (bit: ${previousBit} XOR ${
-            pass.charCodeAt(0) % 2
-          }) usando el primer carácter de la contraseña (${pass.charAt(0)})`;
-          break;
-        case "Suma Mod 2":
-          operationDescription = `Resta mod 2 con (bit: ${previousBit} - ${
-            pass.charCodeAt(0) % 2
-          } % 2) usando el primer carácter de la contraseña (${pass.charAt(
-            0
-          )})`;
-          break;
-        case "Rotación":
-          operationDescription = `Rotación inversa ${
-            pass.charCodeAt(0) % 2 === 1 ? "izquierda" : "derecha"
-          } basada en el primer carácter de la contraseña (${pass.charAt(0)})`;
-          break;
-        case "Inversión":
-          operationDescription = `Inversión inversa ${
-            pass.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 2 ===
-            1
-              ? "realizada"
-              : "no realizada"
-          } según la suma de los valores ASCII de la contraseña (${pass})`;
-          break;
-        case "Permutación":
-          operationDescription = `Permutación inversa basada en los valores ASCII de la contraseña (${pass})`;
-          break;
-        case "Shift Left":
-          operationDescription = `Desplazamiento inverso a la derecha (bit: ${previousBit} -> ${newBit})`;
-          break;
-        case "Shift Right":
-          operationDescription = `Desplazamiento inverso a la izquierda (bit: ${previousBit} -> ${newBit})`;
-          break;
-        case "Inversión por Pares":
-          operationDescription = `Intercambio inverso de bits por pares (bit: ${previousBit} -> ${newBit})`;
-          break;
-        case "Suma Alterna":
-          operationDescription = `Resta -1 en posiciones pares (bit: ${previousBit} -> ${newBit})`;
-          break;
-        case "Password Shift":
-          operationDescription = `Desplazamiento inverso circular por la suma de los valores ASCII de la contraseña (${pass})`;
-          break;
-        case "Alternate XOR":
-          operationDescription = `XOR alterno inverso con (bit: ${previousBit} XOR ${
-            pass.charCodeAt(0) % 2 ^ (index % 2 === 0 ? 0 : 1)
-          }) usando el primer carácter de la contraseña (${pass.charAt(0)})`;
-          break;
-        default:
-          operationDescription = `Operación desconocida`;
+    try {
+      const data = new Uint8Array(items);
+
+      const hmac = data.slice(data.length - 32);
+      const coreData = data.slice(0, data.length - 32);
+
+      const metaLength = (coreData[5] << 8) | coreData[6];
+      const metaStart = 7;
+      const metaEnd = metaStart + metaLength;
+
+      const metadata = JSON.parse(
+        new TextDecoder().decode(coreData.slice(metaStart, metaEnd)),
+      );
+
+      const offset = metaEnd;
+
+      const salt = coreData.slice(offset, offset + 16);
+      const iv = coreData.slice(offset + 16, offset + 28);
+      const encrypted = coreData.slice(offset + 28);
+
+      const isValid = await verifyHMAC(coreData, localPassword, salt, hmac);
+
+      if (!isValid) {
+        throw new Error("Archivo modificado o contraseña incorrecta");
       }
-      resultText += `Paso ${
-        index + 1
-      }:\n${previousBit} ${operationDescription} = ${newBit}\n\n`;
-    });
 
-    // Convertir el array de bits de vuelta a bytes
-    const newBytes = bitsToBytes(decryptedBits);
-    resultText += "Resultado final (bytes): " + newBytes.join(", ");
-    updateAllItems(newBytes);
-    setDecryptedBytes(newBytes);
-    setLog(resultText);
+      const decrypted = await decryptFile(encrypted, localPassword, iv, salt);
+
+      setArray([...decrypted]);
+      setFileName(metadata.name);
+      setFileType(metadata.type);
+
+      setIsDecrypted(true);
+    } catch (err) {
+      console.error(err);
+      alert("Archivo corrupto o contraseña incorrecta");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGuardar = () => {
-    const outputName = fileName
-      ? "descifrado_" + fileName
-      : "archivo_descifrado.bin";
-    const outputType = fileType || "application/octet-stream";
-    const blob = new Blob([new Uint8Array(decryptedBytes)], {
-      type: outputType,
-    });
+  const handleDownload = () => {
+    if (!items.length) {
+      alert("No hay datos");
+      return;
+    }
+
+    // bloqueo
+    if (!isDecrypted) {
+      alert("Primero debes descifrar el archivo");
+      return;
+    }
+
+    const name = fileName || "archivo";
+    const type = fileType || "application/octet-stream";
+
+    const cleanName = name.replace(/^cifrado_/, "");
+
+    const outputName = "descifrado_" + cleanName;
+
+    const blob = new Blob([new Uint8Array(items)], { type });
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -223,40 +118,96 @@ const DescifrarPage = () => {
 
   return (
     <div className="mt-20">
-      <div className="mb-4">
-        <h1 className="text-center text-2xl font-bold">Descifrado</h1>
+      <h1 className="text-center text-2xl font-bold mb-2">Descifrado</h1>
+
+      {/* estado */}
+      <div className="text-center mb-4">
+        {isEncrypted ? (
+          <span className="text-red-400 font-semibold">🔐 Archivo cifrado</span>
+        ) : isDecrypted ? (
+          <span className="text-blue-400 font-semibold">
+            🔓 Archivo descifrado
+          </span>
+        ) : (
+          <span className="text-green-400 font-semibold">
+            📄 Archivo sin cifrar
+          </span>
+        )}
       </div>
-      {/* Input para la contraseña */}
-      <div className="flex justify-center mb-4">
-        <label className="mr-2">Contraseña (4 caracteres):</label>
-        <input
-          type="text"
-          maxLength="4"
-          value={localPassword}
-          onChange={(e) => {
-            setLocalPassword(e.target.value);
-            updatePassword(e.target.value);
-          }}
-          className="border px-2 py-1 bg-gray-800 text-white"
-        />
+      <h2 className="text-center text-base font-bold mb-2">
+        Ingresa una contraseña para descifrar:
+      </h2>
+      {/* contraseña */}
+      <div className="flex justify-center mb-4 items-center gap-2">
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            value={localPassword}
+            maxLength={64}
+            onChange={(e) => {
+              const value = e.target.value;
+
+              setLocalPassword(value);
+              updatePassword(value);
+
+              if (value.length === 0) {
+                setPasswordError("");
+              } else if (value.length < 12) {
+                setPasswordError("Mínimo 12 caracteres");
+              } else if (value.length > 64) {
+                setPasswordError("Máximo 64 caracteres");
+              } else {
+                setPasswordError("");
+              }
+            }}
+            className="w-64 border px-3 py-1 pr-10 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          {passwordError && (
+            <p className="text-red-400 text-sm mt-1 text-center">
+              {passwordError}
+            </p>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
       </div>
+
       <AsciiHexTable />
+
+      {/* botones */}
       <div className="flex justify-center mt-4 space-x-4">
         <button
-          onClick={handleDescifrar}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleDecrypt}
+          disabled={
+            loading ||
+            !isEncrypted ||
+            passwordError ||
+            localPassword.length < 12
+          }
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
         >
-          Descifrar
+          {loading ? "Descifrando..." : "Descifrar"}
         </button>
+
         <button
-          onClick={handleGuardar}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleDownload}
+          disabled={!isDecrypted || loading}
+          className={`font-bold py-2 px-4 rounded transition
+    ${
+      !isDecrypted || loading
+        ? "bg-gray-500 cursor-not-allowed opacity-60"
+        : "bg-blue-500 hover:bg-blue-700 text-white"
+    }`}
         >
-          Guardar Archivo
+          Descargar Archivo
         </button>
-      </div>
-      <div className="mt-6 p-4 bg-gray-800 rounded text-sm">
-        <Bitacora resultText={log} onClear={() => setLog("")} />
       </div>
     </div>
   );
