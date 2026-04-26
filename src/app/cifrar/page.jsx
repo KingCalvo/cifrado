@@ -122,14 +122,17 @@ const CifrarPage = () => {
 
   return (
     <div className="mt-20">
-      <h1 className="text-center text-2xl font-bold mb-2">Cifrado</h1>
+      <h1 className="text-center text-2xl font-semibold text-blue-400 mb-2">
+        Cifrado de archivo
+      </h1>
+      <p className="text-center text-gray-400 text-sm mb-4">
+        Protege tu archivo utilizando cifrado seguro basado en contraseña
+      </p>
 
       {/* estado */}
       <div className="text-center mb-4">
         {isEncrypted ? (
-          <span className="text-red-400 font-semibold">
-            🔐 Archivo ya cifrado
-          </span>
+          <span className="text-red-400 font-semibold">🔐 Archivo cifrado</span>
         ) : (
           <span className="text-green-400 font-semibold">
             📄 Archivo sin cifrar
@@ -162,7 +165,8 @@ const CifrarPage = () => {
                 setPasswordError("");
               }
             }}
-            className="w-64 border px-3 py-1 pr-10 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-64 bg-[#020617] border border-gray-600 text-white rounded-lg px-3 py-2 pr-10
+  focus:border-blue-500 focus:outline-none transition"
           />
           {passwordError && (
             <p className="text-red-400 text-sm mt-1 text-center">
@@ -183,13 +187,19 @@ const CifrarPage = () => {
       <AsciiHexTable />
 
       {/* botones */}
-      <div className="flex justify-center mt-4 space-x-4">
+      <div className="flex justify-center mt-6 gap-4 px-4">
         <button
           onClick={handleCifrar}
           disabled={
             loading || isEncrypted || passwordError || localPassword.length < 12
           }
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+          className={`
+          flex-1 max-w-xs py-3 rounded-lg border transition-all
+          bg-green-500/20 border-green-500 text-green-400
+          hover:bg-green-600/10 hover:text-white
+          active:scale-95
+          ${loading || isEncrypted || passwordError || localPassword.length < 12 ? "opacity-50 cursor-not-allowed" : ""}
+          `}
         >
           {loading ? "Cifrando..." : "Cifrar"}
         </button>
@@ -197,12 +207,14 @@ const CifrarPage = () => {
         <button
           onClick={handleGuardar}
           disabled={!isEncrypted || loading}
-          className={`font-bold py-2 px-4 rounded transition
-    ${
-      !isEncrypted || loading
-        ? "bg-gray-500 cursor-not-allowed opacity-60"
-        : "bg-blue-500 hover:bg-blue-700 text-white"
-    }`}
+          className={`
+          flex-1 max-w-xs py-3 rounded-lg border transition-all
+          ${
+            !isEncrypted || loading
+              ? "bg-gray-800 border-gray-600 text-gray-500 cursor-not-allowed"
+              : "bg-blue-500/20 border-blue-500 text-blue-400 hover:g-blue-600/10 hover:text-white active:scale-95"
+          }
+          `}
         >
           Descargar Archivo
         </button>

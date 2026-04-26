@@ -40,18 +40,22 @@ const Page = () => {
   return (
     <div className="mt-20">
       <div className="mb-4">
-        <h1 className="text-center text-2xl font-bold">Hash (SHA-256)</h1>
+        <h1 className="text-center text-2xl font-semibold text-blue-400 mb-2">
+          Generador de Hash SHA-256
+        </h1>
+        <p className="text-center text-gray-400 text-sm mb-4">
+          Calcula una huella digital única para verificar la integridad del
+          archivo
+        </p>
       </div>
 
-      <AsciiHexTable />
-
       {/* HASH UI */}
-      <div className="w-full max-w-3xl mx-auto flex flex-wrap p-3 mt-4 bg-gray-700 rounded shadow items-center gap-2">
-        <span className="text-white">Hash:</span>
+      <div className="w-full max-w-3xl mx-auto flex flex-wrap p-3 mt-4 mb-4 bg-[#0f172a] rounded shadow items-center gap-2">
+        <span className="text-sm text-gray-400">Resultado del hash</span>
 
         <input
           type="text"
-          className="border px-2 flex-1 bg-gray-900 text-white rounded"
+          className="border px-2 flex-1 bg-[#020617] text-white rounded"
           value={hash}
           readOnly
         />
@@ -60,7 +64,8 @@ const Page = () => {
         <button
           onClick={handleHash}
           disabled={!items.length}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded disabled:opacity-50"
+          className="bg-blue-500/20 border-blue-500 text-blue-400
+hover:bg-blue-600/10 hover:text-white font-bold py-1 px-4 rounded disabled:opacity-50"
         >
           Calcular
         </button>
@@ -72,15 +77,17 @@ const Page = () => {
           className={`font-bold py-1 px-4 rounded transition
             ${
               !hash
-                ? "bg-gray-500 cursor-not-allowed"
+                ? "bg-gray-800 border-gray-600 text-gray-500 cursor-not-allowed"
                 : copied
-                  ? "bg-green-500"
-                  : "bg-purple-500 hover:bg-purple-700 text-white"
+                  ? "bg-green-500/20 border-green-500 text-green-400"
+                  : "bg-purple-500/20 border-purple-500 text-purple-400 hover:bg-purple-600/10 hover:text-white"
             }`}
         >
           {copied ? "Copiado ✓" : "Copiar"}
         </button>
       </div>
+
+      <AsciiHexTable />
     </div>
   );
 };
