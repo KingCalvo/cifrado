@@ -1,12 +1,12 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import AsciiHexTable from "../components/AsciiHexTable";
 import { useArray } from "../context/ArrayContext";
 import { usePassword } from "../context/Password";
 import { verifyHMAC, decryptFile } from "../utils/crypto/crypto";
 import { Eye, EyeOff } from "lucide-react";
 
-const DescifrarPage = () => {
+const DescifrarPage = ({ dict }) => {
   const { items, setArray, fileName, fileType, setFileName, setFileType } =
     useArray();
 
@@ -18,7 +18,6 @@ const DescifrarPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
 
-  // Detectar cifrado
   const isEncrypted = useMemo(() => {
     if (!items || items.length < 4) return false;
 
@@ -35,12 +34,12 @@ const DescifrarPage = () => {
     if (passwordError || localPassword.length < 12) return;
 
     if (!items.length) {
-      alert("No hay datos");
+      alert(dict.decryptPage.noData);
       return;
     }
 
     if (!isEncrypted) {
-      alert("El archivo no está cifrado");
+      alert(dict.decryptPage.notEncrypted);
       return;
     }
 
@@ -69,7 +68,7 @@ const DescifrarPage = () => {
       const isValid = await verifyHMAC(coreData, localPassword, salt, hmac);
 
       if (!isValid) {
-        throw new Error("Archivo modificado o contraseña incorrecta");
+        throw new Error(dict.decryptPage.invalidFile);
       }
 
       const decrypted = await decryptFile(encrypted, localPassword, iv, salt);
@@ -81,7 +80,7 @@ const DescifrarPage = () => {
       setIsDecrypted(true);
     } catch (err) {
       console.error(err);
-      alert("Archivo corrupto o contraseña incorrecta");
+      alert(dict.decryptPage.invalidFile);
     } finally {
       setLoading(false);
     }
@@ -89,13 +88,13 @@ const DescifrarPage = () => {
 
   const handleDownload = () => {
     if (!items.length) {
-      alert("No hay datos");
+      alert(dict.decryptPage.noData);
       return;
     }
 
     // bloqueo
     if (!isDecrypted) {
-      alert("Primero debes descifrar el archivo");
+      alert(dict.decryptPage.mustDecrypt);
       return;
     }
 
@@ -119,28 +118,31 @@ const DescifrarPage = () => {
   return (
     <div className="mt-20">
       <h1 className="text-center text-2xl font-semibold text-blue-400 mb-2">
-        Descifrado de archivo
+        {dict.decryptPage.title}
       </h1>
       <p className="text-center text-gray-400 text-sm mb-4">
-        Recupera el contenido original utilizando la contraseña correcta
+        {dict.decryptPage.description}
       </p>
 
       {/* estado */}
       <div className="text-center mb-4">
         {isEncrypted ? (
-          <span className="text-red-400 font-semibold">🔐 Archivo cifrado</span>
+          <span className="text-red-400 font-semibold">
+            {" "}
+            {dict.decryptPage.statusEncrypted}
+          </span>
         ) : isDecrypted ? (
           <span className="text-blue-400 font-semibold">
-            🔓 Archivo descifrado
+            {dict.decryptPage.statusDecrypted}
           </span>
         ) : (
           <span className="text-green-400 font-semibold">
-            📄 Archivo sin cifrar
+            {dict.decryptPage.statusNotEncrypted}
           </span>
         )}
       </div>
-      <h2 className="text-center text-base font-bold mb-2">
-        Ingresa una contraseña para descifrar:
+      <h2 className="text-center text-sm font-bold mb-2">
+        {dict.decryptPage.passwordLabel}
       </h2>
       {/* contraseña */}
       <div className="flex justify-center mb-4 items-center gap-2">
@@ -158,15 +160,15 @@ const DescifrarPage = () => {
               if (value.length === 0) {
                 setPasswordError("");
               } else if (value.length < 12) {
-                setPasswordError("Mínimo 12 caracteres");
+                setPasswordError(dict.decryptPage.minError);
               } else if (value.length > 64) {
-                setPasswordError("Máximo 64 caracteres");
+                setPasswordError(dict.decryptPage.maxError);
               } else {
                 setPasswordError("");
               }
             }}
             className="w-64 bg-[#020617] border border-gray-600 text-white rounded-lg px-3 py-2 pr-10
-focus:border-blue-500 focus:outline-none transition"
+          focus:border-blue-500 focus:outline-none transition"
           />
 
           {passwordError && (
@@ -198,33 +200,36 @@ focus:border-blue-500 focus:outline-none transition"
             localPassword.length < 12
           }
           className={`
-  flex-1 max-w-xs py-3 rounded-lg border transition-all
-  bg-green-500/20 border-green-500 text-green-400
-  hover:bg-green-600/10 hover:text-white
-  active:scale-95
-  ${
-    loading || !isEncrypted || passwordError || localPassword.length < 12
-      ? "opacity-50 cursor-not-allowed"
-      : ""
-  }
-  `}
+            flex-1 max-w-xs py-3 rounded-lg border transition-all
+            bg-green-500/20 border-green-500 text-green-400
+            hover:bg-green-600/10 hover:text-white
+            active:scale-95
+            ${
+              loading ||
+              !isEncrypted ||
+              passwordError ||
+              localPassword.length < 12
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }
+            `}
         >
-          {loading ? "Descifrando..." : "Descifrar"}
+          {loading ? dict.decryptPage.decrypting : dict.decryptPage.decrypt}
         </button>
 
         <button
           onClick={handleDownload}
           disabled={!isDecrypted || loading}
           className={`
-  flex-1 max-w-xs py-3 rounded-lg border transition-all
-  ${
-    !isDecrypted || loading
-      ? "bg-gray-800 border-gray-600 text-gray-500 cursor-not-allowed"
-      : "bg-blue-500/20 border-blue-500 text-blue-400 hover:bg-blue-600/10 hover:text-white active:scale-95"
-  }
-  `}
+            flex-1 max-w-xs py-3 rounded-lg border transition-all
+            ${
+              !isDecrypted || loading
+                ? "bg-gray-800 border-gray-600 text-gray-500 cursor-not-allowed"
+                : "bg-blue-500/20 border-blue-500 text-blue-400 hover:bg-blue-600/10 hover:text-white active:scale-95"
+            }
+            `}
         >
-          Descargar Archivo
+          {dict.decryptPage.download}
         </button>
       </div>
     </div>

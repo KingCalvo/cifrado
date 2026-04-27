@@ -1,8 +1,13 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useArray } from "../context/ArrayContext";
+import { useParams } from "next/navigation";
+import { getDictionary } from "../../../lib/getDictionary";
 
 const ByteViewer = () => {
+  const params = useParams();
+  const [dict, setDict] = useState(null);
+
   const { items, setArray } = useArray();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -15,8 +20,11 @@ const ByteViewer = () => {
   const [isEditingIndex, setIsEditingIndex] = useState(false);
   const containerRef = useRef(null);
 
-  // detectar móvil
   const [cols, setCols] = useState(10);
+
+  useEffect(() => {
+    getDictionary(params.lang).then(setDict);
+  }, [params.lang]);
 
   useEffect(() => {
     const updateCols = () => {
@@ -229,11 +237,12 @@ const ByteViewer = () => {
     </>
   );
 
+  if (!dict) return null;
   return (
-    <div className="w-full h-[65vh] flex flex-col bg-gray-900 text-white rounded-lg shadow-lg">
+    <div className="w-full h-[60vh] flex flex-col bg-gray-900 text-white rounded-lg shadow-lg">
       {/* header */}
       <div className="p-3 border-b border-gray-700 text-center font-bold">
-        Visor de Bytes
+        {dict.byteViewer.title}
       </div>
 
       {/* Tabs movil */}
@@ -244,7 +253,7 @@ const ByteViewer = () => {
             view === "ascii" ? "bg-blue-500" : "bg-gray-700"
           }`}
         >
-          ASCII
+          {dict.byteViewer.ascii}
         </button>
 
         <button
@@ -253,7 +262,7 @@ const ByteViewer = () => {
             view === "hex" ? "bg-blue-500" : "bg-gray-700"
           }`}
         >
-          HEX
+          {dict.byteViewer.hex}
         </button>
       </div>
 
@@ -276,7 +285,7 @@ const ByteViewer = () => {
       <div className="sticky bottom-0 bg-[#0f172a] p-3 border-t border-gray-700 flex flex-wrap gap-4 items-center justify-center text-sm">
         {/* Posición */}
         <div className="flex items-center gap-2 text-gray-400">
-          <span>Posición:</span>
+          <span>{dict.byteViewer.position}</span>
           <input
             type="number"
             inputMode="numeric"
@@ -331,13 +340,13 @@ const ByteViewer = () => {
           hover:bg-gray-700 hover:text-white
           active:scale-95"
           >
-            Inicio
+            {dict.byteViewer.start}
           </button>
         </div>
 
         {/* ASCII */}
         <div className="flex items-center gap-2 text-gray-400">
-          <span>ASCII:</span>
+          <span>{dict.byteViewer.editAscii}</span>
           <input
             maxLength={1}
             className="w-12 px-2 py-1 bg-[#020617] border border-gray-600 rounded text-center focus:border-blue-500 focus:outline-none"
@@ -351,7 +360,7 @@ const ByteViewer = () => {
 
         {/* HEX */}
         <div className="flex items-center gap-2 text-gray-400">
-          <span>HEX:</span>
+          <span>{dict.byteViewer.editHex}</span>
           <input
             maxLength={2}
             className="w-12 px-2 py-1 bg-[#020617] border border-gray-600 rounded text-center focus:border-blue-500 focus:outline-none"
@@ -371,7 +380,7 @@ const ByteViewer = () => {
     hover:bg-blue-600/10 hover:text-white
     active:scale-95"
         >
-          Guardar
+          {dict.byteViewer.save}
         </button>
 
         {/* Corromper */}
@@ -382,7 +391,7 @@ const ByteViewer = () => {
           hover:bg-red-600/10 hover:text-white
           active:scale-95"
         >
-          Corromper 1 byte
+          {dict.byteViewer.corrupt}
         </button>
       </div>
     </div>

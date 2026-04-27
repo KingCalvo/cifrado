@@ -1,9 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useArray } from "../context/ArrayContext";
 import { FaFileDownload, FaFileAlt } from "react-icons/fa";
 
-const DocumentForm = () => {
+const DocumentClient = ({ dict }) => {
   const [file, setFile] = useState(null);
   const { setArray, clearItems, items, fileName, setFileName, setFileType } =
     useArray();
@@ -46,7 +46,7 @@ const DocumentForm = () => {
 
     reader.onerror = () => {
       setLoading(false);
-      alert("Error al leer archivo");
+      alert(dict.document.error);
     };
   };
 
@@ -78,7 +78,7 @@ const DocumentForm = () => {
       >
         {/* Título */}
         <h2 className="text-xl text-center font-semibold text-blue-400">
-          Selecciona un archivo para cargarlo en el sistema
+          {dict.document.title}
         </h2>
 
         {/* Upload */}
@@ -88,7 +88,7 @@ const DocumentForm = () => {
           hover:border-blue-400 hover:bg-blue-500/5 transition-all"
         >
           <FaFileDownload className="text-3xl text-blue-400 mb-2" />
-          <p className="text-gray-300 text-sm">Seleccionar archivo</p>
+          <p className="text-gray-300 text-sm"> {dict.document.selectFile}</p>
         </label>
 
         {/* Info archivo */}
@@ -101,10 +101,10 @@ const DocumentForm = () => {
           {/* Texto */}
           <div className="flex flex-col text-sm">
             <span className={fileName ? "text-green-400" : "text-gray-400"}>
-              {fileName || "Ningún archivo seleccionado"}
+              {fileName || dict.document.noFile}
             </span>
             <span className="text-xs text-gray-500">
-              {items.length} bytes cargados
+              {items.length} {dict.document.bytesLoaded}
             </span>
           </div>
         </div>
@@ -125,7 +125,7 @@ const DocumentForm = () => {
             className="flex-1 bg-red-600/10 border border-red-500 text-red-400 py-3 rounded-lg
             hover:bg-red-500/20 hover:text-white transition-all"
           >
-            Vaciar
+            {dict.document.clear}
           </button>
 
           {/* Cargar - derecha */}
@@ -135,7 +135,7 @@ const DocumentForm = () => {
             hover:bg-blue-500/20 hover:text-white hover:shadow-[0_0_10px_#3b82f6]
             transition-all"
           >
-            Cargar
+            {dict.document.load}
           </button>
         </div>
       </form>
@@ -143,4 +143,4 @@ const DocumentForm = () => {
   );
 };
 
-export default DocumentForm;
+export default DocumentClient;

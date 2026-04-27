@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import AsciiHexTable from "../components/AsciiHexTable";
 import { useArray } from "../context/ArrayContext";
 import { usePassword } from "../context/Password";
@@ -7,7 +7,7 @@ import { concatBuffers } from "../utils/crypto/buffer";
 import { generateHMAC, encryptFile } from "../utils/crypto/crypto";
 import { Eye, EyeOff } from "lucide-react";
 
-const CifrarPage = () => {
+const CifrarPage = ({ dict }) => {
   const { items, setArray, fileName, fileType } = useArray();
   const { password, updatePassword } = usePassword();
 
@@ -16,7 +16,6 @@ const CifrarPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
 
-  // Detectar si esta cifrado
   const isEncrypted = useMemo(() => {
     if (!items || items.length < 4) return false;
 
@@ -35,13 +34,13 @@ const CifrarPage = () => {
     }
 
     if (!items.length) {
-      alert("No hay datos");
+      alert(dict.encryptPage.noData);
       return;
     }
 
     // bloqueo
     if (isEncrypted) {
-      alert("Este archivo ya está cifrado");
+      alert(dict.encryptPage.alreadyEncrypted);
       return;
     }
 
@@ -85,7 +84,7 @@ const CifrarPage = () => {
       setArray([...finalData]);
     } catch (err) {
       console.error(err);
-      alert("Error al cifrar");
+      alert(dict.encryptPage.encryptError);
     } finally {
       setLoading(false);
     }
@@ -93,12 +92,12 @@ const CifrarPage = () => {
 
   const handleGuardar = () => {
     if (!items.length) {
-      alert("No hay datos para descargar");
+      alert(dict.encryptPage.noDownload);
       return;
     }
 
     if (!isEncrypted) {
-      alert("Primero debes cifrar el archivo");
+      alert(dict.encryptPage.mustEncrypt);
       return;
     }
 
@@ -123,24 +122,26 @@ const CifrarPage = () => {
   return (
     <div className="mt-20">
       <h1 className="text-center text-2xl font-semibold text-blue-400 mb-2">
-        Cifrado de archivo
+        {dict.encryptPage.title}
       </h1>
       <p className="text-center text-gray-400 text-sm mb-4">
-        Protege tu archivo utilizando cifrado seguro basado en contraseña
+        {dict.encryptPage.description}
       </p>
 
       {/* estado */}
       <div className="text-center mb-4">
         {isEncrypted ? (
-          <span className="text-red-400 font-semibold">🔐 Archivo cifrado</span>
+          <span className="text-red-400 font-semibold">
+            {dict.encryptPage.statusEncrypted}
+          </span>
         ) : (
           <span className="text-green-400 font-semibold">
-            📄 Archivo sin cifrar
+            {dict.encryptPage.statusNotEncrypted}
           </span>
         )}
       </div>
-      <h2 className="text-center text-base font-bold mb-2">
-        Ingresa una contraseña para cifrar:
+      <h2 className="text-center text-sm font-bold mb-2">
+        {dict.encryptPage.passwordLabel}
       </h2>
       {/* contraseña */}
       <div className="flex justify-center mb-4 items-center gap-2">
@@ -158,9 +159,9 @@ const CifrarPage = () => {
               if (value.length === 0) {
                 setPasswordError("");
               } else if (value.length < 12) {
-                setPasswordError("Mínimo 12 caracteres");
+                setPasswordError(dict.encryptPage.minError);
               } else if (value.length > 64) {
-                setPasswordError("Máximo 64 caracteres");
+                setPasswordError(dict.encryptPage.maxError);
               } else {
                 setPasswordError("");
               }
@@ -201,7 +202,7 @@ const CifrarPage = () => {
           ${loading || isEncrypted || passwordError || localPassword.length < 12 ? "opacity-50 cursor-not-allowed" : ""}
           `}
         >
-          {loading ? "Cifrando..." : "Cifrar"}
+          {loading ? dict.encryptPage.encrypting : dict.encryptPage.encrypt}
         </button>
 
         <button
@@ -216,7 +217,7 @@ const CifrarPage = () => {
           }
           `}
         >
-          Descargar Archivo
+          {dict.encryptPage.download}
         </button>
       </div>
     </div>

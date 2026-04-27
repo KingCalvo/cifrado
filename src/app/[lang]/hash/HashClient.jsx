@@ -4,7 +4,7 @@ import AsciiHexTable from "../components/AsciiHexTable";
 import { useArray } from "../context/ArrayContext";
 import { hashSHA256 } from "../utils/crypto/crypto";
 
-const Page = () => {
+const HashClient = ({ dict }) => {
   const { items } = useArray();
 
   const [hash, setHash] = useState("");
@@ -12,7 +12,7 @@ const Page = () => {
 
   const handleHash = async () => {
     if (!items || items.length === 0) {
-      alert("No hay datos para calcular el hash");
+      alert(dict.hashPage.noData);
       return;
     }
 
@@ -33,25 +33,26 @@ const Page = () => {
       // reset después de 2s
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Error al copiar:", err);
+      console.error(dict.hashPage.copyError, err);
     }
   };
 
   return (
-    <div className="mt-20">
+    <div className="mt-24">
       <div className="mb-4">
         <h1 className="text-center text-2xl font-semibold text-blue-400 mb-2">
-          Generador de Hash SHA-256
+          {dict.hashPage.title}
         </h1>
         <p className="text-center text-gray-400 text-sm mb-4">
-          Calcula una huella digital única para verificar la integridad del
-          archivo
+          {dict.hashPage.description}
         </p>
       </div>
 
       {/* HASH UI */}
       <div className="w-full max-w-3xl mx-auto flex flex-wrap p-3 mt-4 mb-4 bg-[#0f172a] rounded shadow items-center gap-2">
-        <span className="text-sm text-gray-400">Resultado del hash</span>
+        <span className="text-sm text-gray-400">
+          {dict.hashPage.resultLabel}
+        </span>
 
         <input
           type="text"
@@ -65,9 +66,9 @@ const Page = () => {
           onClick={handleHash}
           disabled={!items.length}
           className="bg-blue-500/20 border-blue-500 text-blue-400
-hover:bg-blue-600/10 hover:text-white font-bold py-1 px-4 rounded disabled:opacity-50"
+          hover:bg-blue-600/10 hover:text-white font-bold py-1 px-4 rounded disabled:opacity-50"
         >
-          Calcular
+          {dict.hashPage.calculate}
         </button>
 
         {/* Copiar */}
@@ -83,7 +84,7 @@ hover:bg-blue-600/10 hover:text-white font-bold py-1 px-4 rounded disabled:opaci
                   : "bg-purple-500/20 border-purple-500 text-purple-400 hover:bg-purple-600/10 hover:text-white"
             }`}
         >
-          {copied ? "Copiado ✓" : "Copiar"}
+          {copied ? dict.hashPage.copied : dict.hashPage.copy}
         </button>
       </div>
 
@@ -92,4 +93,4 @@ hover:bg-blue-600/10 hover:text-white font-bold py-1 px-4 rounded disabled:opaci
   );
 };
 
-export default Page;
+export default HashClient;

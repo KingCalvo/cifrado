@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "home": "Home",
+    "document": "Document",
+    "encrypt": "Encrypt",
+    "decrypt": "Decrypt",
+    "hash": "Hash"
+  },
+
+  "footer": {
+    "description": "File encryption system that allows byte visualization, content modification, and secure data protection using strong algorithms.",
+    "links": "Navigation",
+    "info": "Information",
+    "contact": "Contact",
+    "email": "Email",
+    "rights": "All rights reserved"
+  },
+
+  "home": {
+    "title": "EncryptPath",
+    "title2": "Home | EncryptPath",
+    "intro": "This system allows you to upload files, visualize their bytes in ASCII and HEX format, encrypt them using a password, and later decrypt them. It also includes SHA-256 hash generation to verify integrity.",
+
+    "encryptTitle": "🔐 Tutorial: Encrypt a file",
+
+    "step1Title": "Step 1: Select file",
+    "step1Desc": "Click \"Select file\" to choose a file from your device.",
+
+    "step2Title": "Step 2: Load file",
+    "step2Desc": "Press the \"Load\" button to convert the file into bytes within the system.",
+
+    "step3Title": "Step 3: Go to Encrypt file",
+    "step3Desc": "Go to the encryption section and enter a password.\n\nYou can use the ASCII and HEX tables to:\n• Manually modify the file bytes\n• Analyze how the information changes\n• Understand the internal representation of the file",
+
+    "step4Title": "Step 4: Encrypt file",
+    "step4Desc": "Press the encrypt button to transform the bytes using your password.",
+
+    "step5Title": "Step 5: Download encrypted file",
+    "step5Desc": "Download the encrypted file to store or share it.",
+
+    "step6Title": "Step 6: Review file",
+    "step6Desc": "Review the encrypted file and compare it with the original.",
+
+    "decryptTitle": "🔓 Tutorial: Decrypt a file",
+
+    "dstep1Title": "Step 1: Load encrypted file",
+    "dstep1Desc": "Load the previously downloaded encrypted file. If there is data loaded, clear it first.",
+
+    "dstep2Title": "Step 2: Decrypt encrypted file",
+    "dstep2Desc": "Enter the same password used during encryption and press decrypt. If the password is correct, you will recover the original file.",
+
+    "dstep3Title": "Step 3: Download decrypted file",
+    "dstep3Desc": "Download the decrypted file to store or share it.",
+
+    "dstep4Title": "Step 4: Review decrypted file",
+    "dstep4Desc": "Review the decrypted file and compare it with the original.",
+
+    "hashTitle": "# Hash (SHA-256)",
+    "hashDesc": "The hash generates a unique fingerprint of the file.\n\nIt is used to:\n• Verify integrity\n• Detect changes\n• Compare files\n\nYou can modify a single byte of the file and you will see how the hash changes completely, demonstrating sensitivity even to minimal changes."
+  },
+
+  "document": {
+    "title1": "Select file",
+    "title": "Select a file to load it into the system",
+    "selectFile": "Select file",
+    "noFile": "No file selected",
+    "bytesLoaded": "bytes loaded",
+    "clear": "Clear",
+    "load": "Load",
+    "error": "Error reading file"
+  },
+
+  "encryptPage": {
+    "title": "File Encryption",
+    "description": "Protect your file using secure password-based encryption",
+    "statusEncrypted": "🔐 Encrypted file",
+    "statusNotEncrypted": "📄 Unencrypted file",
+    "passwordLabel": "Enter a password to encrypt:",
+    "minError": "Minimum 12 characters",
+    "maxError": "Maximum 64 characters",
+    "noData": "No data available",
+    "alreadyEncrypted": "This file is already encrypted",
+    "encryptError": "Encryption error",
+    "noDownload": "No data to download",
+    "mustEncrypt": "You must encrypt the file first",
+    "encrypting": "Encrypting...",
+    "encrypt": "Encrypt",
+    "download": "Download File"
+  },
+
+  "decryptPage": {
+    "title": "File Decryption",
+    "description": "Recover the original content using the correct password",
+    "statusEncrypted": "🔐 Encrypted file",
+    "statusDecrypted": "🔓 Decrypted file",
+    "statusNotEncrypted": "📄 Unencrypted file",
+    "passwordLabel": "Enter a password to decrypt:",
+    "minError": "Minimum 12 characters",
+    "maxError": "Maximum 64 characters",
+    "noData": "No data available",
+    "notEncrypted": "The file is not encrypted",
+    "invalidFile": "Corrupted file or incorrect password",
+    "mustDecrypt": "You must decrypt the file first",
+    "decrypting": "Decrypting...",
+    "decrypt": "Decrypt",
+    "download": "Download File"
+  },
+
+  "hashPage": {
+    "title": "SHA-256 Hash Generator",
+    "description": "Calculate a unique digital fingerprint to verify file integrity",
+    "resultLabel": "Hash result",
+    "calculate": "Calculate",
+    "copy": "Copy",
+    "copied": "Copied ✓",
+    "noData": "No data to calculate hash",
+    "copyError": "Copy error"
+  },
+
+  "byteViewer": {
+    "title": "Byte Viewer",
+    "ascii": "ASCII",
+    "hex": "HEX",
+    "position": "Position:",
+    "start": "Start",
+    "editAscii": "Edit ASCII:",
+    "editHex": "Edit HEX:",
+    "save": "Save",
+    "corrupt": "Corrupt 1 byte"
+  }
+}

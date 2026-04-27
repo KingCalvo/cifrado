@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "document": "Documento",
+    "encrypt": "Cifrar",
+    "decrypt": "Descifrar",
+    "hash": "Hash"
+  },
+
+  "footer": {
+    "description": "Sistema de cifrado de archivos que permite visualizar bytes, modificar contenido y proteger información mediante algoritmos seguros.",
+    "links": "Navegación",
+    "info": "Información",
+    "contact": "Contacto",
+    "email": "Correo electrónico",
+    "rights": "Todos los derechos reservados"
+  },
+
+  "home": {
+    "title": "EncryptPath",
+    "title2": "Inicio | EncryptPath",
+    "intro": "Este sistema permite cargar archivos, visualizar sus bytes en formato ASCII y HEX, cifrarlos mediante una contraseña y posteriormente descifrarlos. También incluye generación de hash SHA-256 para verificar integridad.",
+
+    "encryptTitle": "🔐 Tutorial: Cifrar un archivo",
+
+    "step1Title": "Paso 1: Seleccionar archivo",
+    "step1Desc": "Haz clic en \"Seleccionar archivo\" para elegir un archivo desde tu dispositivo.",
+
+    "step2Title": "Paso 2: Cargar archivo",
+    "step2Desc": "Presiona el botón \"Cargar\" para convertir el archivo en bytes dentro del sistema.",
+
+    "step3Title": "Paso 3: Ir a Cifrar archivo",
+    "step3Desc": "Dirígete a la sección de cifrado e ingresa una contraseña.\n\nPuedes usar las tablas ASCII y HEX para:\n• Modificar manualmente los bytes del archivo\n• Analizar cómo cambia la información\n• Entender la representación interna del archivo",
+
+    "step4Title": "Paso 4: Cifrar archivo",
+    "step4Desc": "Presiona el botón de cifrar para transformar los bytes usando tu contraseña.",
+
+    "step5Title": "Paso 5: Descargar archivo cifrado",
+    "step5Desc": "Descarga el archivo cifrado para almacenarlo o compartirlo.",
+
+    "step6Title": "Paso 6: Revisar archivo",
+    "step6Desc": "Revisa el archivo cifrado y compara con el original.",
+
+    "decryptTitle": "🔓 Tutorial: Descifrar un archivo",
+
+    "dstep1Title": "Paso 1: Cargar archivo cifrado",
+    "dstep1Desc": "Carga el archivo cifrado previamente descargado. Si hay datos cargados vacialos antes.",
+
+    "dstep2Title": "Paso 2: Descifrar archivo cifrado",
+    "dstep2Desc": "Introduce la misma contraseña utilizada en el cifrado y presiona descifrar. Si la contraseña es correcta, recuperarás el archivo original.",
+
+    "dstep3Title": "Paso 3: Descargar archivo descifrado",
+    "dstep3Desc": "Descarga el archivo descifrado para almacenarlo o compartirlo.",
+
+    "dstep4Title": "Paso 4: Revisar archivo descifrado",
+    "dstep4Desc": "Revisa el archivo descifrado y compara con el original.",
+
+    "hashTitle": "# Hash (SHA-256)",
+    "hashDesc": "El hash genera una huella única del archivo.\n\nSirve para:\n• Verificar integridad\n• Detectar cambios\n• Comparar archivos\n\nPuedes cambiar un byte del archivo y verás cómo el hash cambia completamente, demostrando la sensibilidad a cambios incluso mínimos."
+  },
+
+  "document": {
+    "title1": "Seleccionar archivo",
+    "title": "Selecciona un archivo para cargarlo en el sistema",
+    "selectFile": "Seleccionar archivo",
+    "noFile": "Ningún archivo seleccionado",
+    "bytesLoaded": "bytes cargados",
+    "clear": "Vaciar",
+    "load": "Cargar",
+    "error": "Error al leer archivo"
+  },
+
+  "encryptPage": {
+    "title": "Cifrado de archivo",
+    "description": "Protege tu archivo utilizando cifrado seguro basado en contraseña",
+    "statusEncrypted": "🔐 Archivo cifrado",
+    "statusNotEncrypted": "📄 Archivo sin cifrar",
+    "passwordLabel": "Ingresa una contraseña para cifrar:",
+    "minError": "Mínimo 12 caracteres",
+    "maxError": "Máximo 64 caracteres",
+    "noData": "No hay datos",
+    "alreadyEncrypted": "Este archivo ya está cifrado",
+    "encryptError": "Error al cifrar",
+    "noDownload": "No hay datos para descargar",
+    "mustEncrypt": "Primero debes cifrar el archivo",
+    "encrypting": "Cifrando...",
+    "encrypt": "Cifrar",
+    "download": "Descargar Archivo"
+  },
+
+  "decryptPage": {
+    "title": "Descifrado de archivo",
+    "description": "Recupera el contenido original utilizando la contraseña correcta",
+    "statusEncrypted": "🔐 Archivo cifrado",
+    "statusDecrypted": "🔓 Archivo descifrado",
+    "statusNotEncrypted": "📄 Archivo sin cifrar",
+    "passwordLabel": "Ingresa una contraseña para descifrar:",
+    "minError": "Mínimo 12 caracteres",
+    "maxError": "Máximo 64 caracteres",
+    "noData": "No hay datos",
+    "notEncrypted": "El archivo no está cifrado",
+    "invalidFile": "Archivo corrupto o contraseña incorrecta",
+    "mustDecrypt": "Primero debes descifrar el archivo",
+    "decrypting": "Descifrando...",
+    "decrypt": "Descifrar",
+    "download": "Descargar Archivo"
+  },
+
+  "hashPage": {
+    "title": "Generador de Hash SHA-256",
+    "description": "Calcula una huella digital única para verificar la integridad del archivo",
+    "resultLabel": "Resultado del hash",
+    "calculate": "Calcular",
+    "copy": "Copiar",
+    "copied": "Copiado ✓",
+    "noData": "No hay datos para calcular el hash",
+    "copyError": "Error al copiar"
+  },
+
+  "byteViewer": {
+    "title": "Visor de Bytes",
+    "ascii": "ASCII",
+    "hex": "HEX",
+    "position": "Posición:",
+    "start": "Inicio",
+    "editAscii": "Editar ASCII:",
+    "editHex": "Editar HEX:",
+    "save": "Guardar",
+    "corrupt": "Corromper 1 byte"
+  }
+}
