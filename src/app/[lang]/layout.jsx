@@ -4,7 +4,6 @@ import Footer from "./components/Footer";
 import { ArrayProvider } from "./context/ArrayContext";
 import { PasswordProvider } from "./context/Password";
 import { getDictionary } from "../../lib/getDictionary";
-import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,20 +24,16 @@ export default async function LangLayout(props) {
   const dict = await getDictionary(lang);
 
   return (
-    <html lang={lang}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Nav lang={lang} dict={dict} />
+    <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <Nav lang={lang} dict={dict} />
 
-        <main className="w-full min-h-screen">
-          <ArrayProvider>
-            <PasswordProvider>{children}</PasswordProvider>
-          </ArrayProvider>
-        </main>
+      <main className="w-full min-h-screen">
+        <ArrayProvider>
+          <PasswordProvider>{children}</PasswordProvider>
+        </ArrayProvider>
+      </main>
 
-        <Footer dict={dict} />
-      </body>
-    </html>
+      <Footer dict={dict} />
+    </div>
   );
 }
